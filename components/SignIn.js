@@ -94,6 +94,7 @@ class SignIn extends Component {
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>Password:</Text>
             <TextInput
+            
               placeholder="Enter password..."
               style={styles.formInput}
               secureTextEntry
