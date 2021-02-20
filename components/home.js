@@ -8,16 +8,18 @@ import {
 } from 'react-native'
 
 class Home extends Component {
-    componentDidMount() {
+    /*componentDidMount() {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
             this.checkLoggedIn();
 
         });
-    }
+    }*/
+
+    /*
 
     componentWillUnmount() {
     
-        this.checkLoggedIn;
+        this.unsubscribe;
     }
 
     checkLoggedIn = async () => {
@@ -28,7 +30,7 @@ class Home extends Component {
         if (value == null) {
             this.props.navigation.navigate('LoginScreen');
         }
-    };
+    };*/
 
 
   signOut = async () => {
