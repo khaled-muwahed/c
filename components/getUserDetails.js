@@ -1,6 +1,6 @@
 import * as React from 'react';
 //import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 class getUser extends React.Component {
    
@@ -9,13 +9,18 @@ class getUser extends React.Component {
     super(props);
     this.state = {
 
+      isLoading: true,
+      userData: null
+/*
       first_name: '',
       last_name: '',
       email: '',
       favourite_locations: [],
       liked_reviews: [],
       reviews: [],
-      user_id: ''
+      user_id: '',
+      review:'',
+      info:{}*/
     };
 
   }
@@ -40,9 +45,15 @@ class getUser extends React.Component {
         }
       })
       .then(async (responseJson) => {
-        console.log(responseJson);
+        this.setState ({
+          isLoading: false,
+          userData : responseJson
+        });
+
+
+        //console.log(this.state.info + " the response");
         
-        this.setState({'first_name': responseJson.first_name});
+       /* this.setState({'first_name': responseJson.first_name});
         this.setState({'last_name': responseJson.last_name});
         this.setState({'email': responseJson.email});
         this.setState({'favourite_locations' : responseJson.favourite_locations});
@@ -50,7 +61,11 @@ class getUser extends React.Component {
         this.setState({'reviews' : responseJson.reviews});
         this.setState({'user_id' : responseJson.user_id});
 
-        console.log(this.state);
+        this.setState({'review' : responseJson.review});
+
+        */
+
+       //  console.log(this.state);
 
 
         
@@ -61,6 +76,8 @@ class getUser extends React.Component {
         console.log(error);
       })
     }
+
+
 
  
 
@@ -96,6 +113,9 @@ class getUser extends React.Component {
 
 
   render() {
+   
+
+    
     const navigator = this.props.navigation;
       console.log('get data rendering');
     if (this.state.isLoading) {
@@ -110,52 +130,50 @@ class getUser extends React.Component {
       )
     }
 
+    else{
+      
+
     //<Text onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>{item.location_name }</Text>
     return (
             <View style={{flex:1}}>
-                <View>
+               
                     
-                <Text >Name: {this.state.first_name + " " + this.state.last_name  }</Text>
-                <Text >Email: {this.state.email}</Text>
-                </View>
-                <View>
-                    <Text style = {styles.textStyle}>User favourite locations </Text>
-                    </View>
-                
+              <Text >Name: {this.state.userData.first_name + " " + this.state.userData.last_name  }</Text>
+              <Text >Email: {this.state.userData.email}</Text>
+                  
+              <TouchableOpacity style ={styles.buttonStyle}
+               onPress={() => navigator.navigate('ViewReviews')  }>
+               <Text >View my Reviews</Text>
+               </TouchableOpacity>
+
                 <FlatList
-                    data={this.state.favourite_locations}
-                    renderItem={({item})=>(
-                    <View>
-                        <View > 
-                        <Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>{item.location_name 
-                        }</Text>
-                        </View>
-
-                        
-                        <Text >{"ID: " + item.location_id
-                        }</Text>
-
-                        <Text >{"Town: " + item.location_town}</Text>
-                        
-                    
-                        <Text>{"Rating " + item.avg_overall_rating }</Text>    
-                        <Text>{}</Text>        
+                showsVerticalScrollIndicator
+                          
+                data={this.state.userData.favourite_locations}
+                renderItem={({item})=>(
+                <View>
+                    <View > 
+                    <Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>{item.location_name 
+                    }</Text>
                     </View>
-                    )}
-                    keyExtractor= {(item)=> item.location_id.toString()}
+                    <Text >{"Town: " + item.location_town}</Text>
+                    
 
-                    />
+                    <Text>{"Rating " + item.avg_overall_rating }</Text>    
+                    <Text>{}</Text>        
+                    </View>
 
-
-
-
-
+                )}
+                keyExtractor= {(item)=> item.location_id.toString()}
+                />
             </View>
        
 
      
     );
   }
+  
+}
 }
 
 const styles = StyleSheet.create({
