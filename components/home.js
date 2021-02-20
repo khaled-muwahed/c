@@ -4,33 +4,62 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  RefreshControl,
+  FlatList
+  ,
+
   View,
+  Button,
 } from 'react-native'
 
 class Home extends Component {
-    /*componentDidMount() {
-        this.unsubscribe = this.props.navigation.addListener('focus', () => {
-            this.checkLoggedIn();
+  constructor(props) {
 
-        });
-    }*/
+    super(props);
+    this.state = {
 
-    /*
+      refreshing: false,
+      setRefreshing: false,
 
-    componentWillUnmount() {
+      isLoading: true,
     
-        this.unsubscribe;
-    }
+      locations: null,
+      
+    };
 
-    checkLoggedIn = async () => {
+  }
 
-        const value = await AsyncStorage.getItem('@session_token');
-        const userID = await AsyncStorage.getItem('@user_id');
-        console.log(value, userID);
-        if (value == null) {
-            this.props.navigation.navigate('LoginScreen');
+
+    displayCoffeeShops = async () => {
+      console.log('we are in user details');
+    let id = await  AsyncStorage.getItem('@user_id');
+    let token = await  AsyncStorage.getItem('@session_token');
+    return fetch('http://10.0.2.2:3333/api/1.0.0/find', {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-authorization' : token
         }
-    };*/
+      })
+      .then((response) => {
+        if(response.status === 200) {
+          return response.json()
+        }else{
+          throw 'Somthing went wrong';
+        }
+      })
+      .then(async (responseJson) => {
+        this.setState ({
+          isLoading: false,
+          locations : responseJson
+        });
+
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    
+    }
 
 
   signOut = async () => {
@@ -64,61 +93,146 @@ class Home extends Component {
   updateUser = () => {
       this.props.navigation.navigate('Update');
   }
-  
 
- render() {
-    //const navigator = this.props.navigation;
-        
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity
+  SearchUserPge = () => {
+    this.props.navigation.navigate('SearchUser');
+}
+
+
+
+  componentDidMount() {
+    this.displayCoffeeShops();
+    //this.getData();
+    }
+
+    onRefresh = () => {
+      this.displayCoffeeShops();
+      console.log("redsfsfres")
+    }
+
+  /*  
+   <View style={styles.fixToText}>
+        <Button
          style={styles.button}
          onPress={this.signOut}
         >
          <Text>logout</Text>
-        </TouchableOpacity>
-        <View>
+        </Button>
 
-        <TouchableOpacity
+        <Button
          style={styles.button}
          onPress={this.updateUser}
         >
          <Text>go to update page</Text>
-        </TouchableOpacity>
-        
-  
-        </View>
-        
+        </Button>  
 
-
-        <View>
-
-        <TouchableOpacity
+        <Button
          style={styles.button}
          onPress={this.getUserDetails}
         >
          <Text>show your details</Text>
-        </TouchableOpacity>
+        </Button>
         
   
-        </View>
+       
       </View>
+  */
+  
+
+ render() {
+    const navigator = this.props.navigation;
+        
+    return (
+    <View> 
+      <View style={styles.fixToText}>
+        <Button
+        title="logout"
+        onPress={() => this.signOut()}
+        />
+        <Button
+        title="update account"
+        onPress={() =>this.updateUser()}
+        />
+        <Button
+        title="show my details"
+        onPress={() =>this.getUserDetails()}
+        />
+        <Button
+        title="search"
+        onPress={() =>this.SearchUserPge()}
+        />
+      </View>
+      
+      <FlatList  
+                refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.onRefresh}
+                  />
+                }
+                 style = {styles.fields}
+                data={this.state.locations}
+                renderItem={({item})=>(
+
+                    
+                    <View style = {styles.fields}>
+                      
+                      < Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>
+                          {"Name: " + item.location_name}</Text>
+                        <Text >{"overall_rating: " + item.avg_overall_rating
+                        }</Text>
+                        
+                        <Text>{}</Text>        
+                    </View>
+                    )}
+                    keyExtractor= {(item)=> item.location_id.toString()}
+                />
+
+
+
+    </View>
+
+     
     )
   }
 }
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 12,
-    marginBottom: 8
-  }
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        marginHorizontal: 16,
+      },
+      title: {
+        textAlign: 'center',
+        marginVertical: 8,
+      },
+      fixToText: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+      },
+      separator: {
+        marginVertical: 8,
+        borderBottomColor: '#737373',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+      },
+      clickable: {
+        fontWeight: "bold",
+        fontSize: 25,
+        textDecorationLine : "underline"
+    
+      }
+      ,
+      fields: {
+        margin: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
+        marginVertical: 15,
+        fontSize: 20,
+    
+      },
+
 })
+;
+
 
 export default Home;
