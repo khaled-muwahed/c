@@ -34,7 +34,7 @@ class LocatinInfo extends React.Component {
 
   getData =  async () => {
       console.log('we are in coffee details');
-    let id = await  AsyncStorage.getItem('@user_id');
+    //let id = await  AsyncStorage.getItem('@user_id');
     let token = await  AsyncStorage.getItem('@session_token');
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/'+this.state.clicked_location_id, {
         method: 'get',
