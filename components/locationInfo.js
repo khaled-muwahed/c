@@ -16,6 +16,7 @@ class LocatinInfo extends React.Component {
           setRefreshing: false,
           isDisabled: false,
           isLoading: true,
+          isLiked: false,
           userData: null,
           clicked_location_id: this.props.route.params.location_id,
           overall_rating: 0,
@@ -94,7 +95,7 @@ class LocatinInfo extends React.Component {
       })
       .then((response) => {
         if(response.status === 200) {
-          console.log('success');
+          console.log('ADDED');
           ToastAndroid.show("added to favourite", ToastAndroid.show);
         }else{
           throw 'Somthing went wrong';
@@ -117,7 +118,7 @@ class LocatinInfo extends React.Component {
          })
          .then((response) => {
            if(response.status === 200) {
-             console.log('success');
+             console.log('DELETED');
              ToastAndroid.show("deleted", ToastAndroid.show);
            }else{
              throw 'Somthing went wrong';
@@ -132,6 +133,59 @@ class LocatinInfo extends React.Component {
         this.props.navigation.navigate('Update');
     }
 
+
+
+    
+    checkFav = async ()=>{
+      let token = await AsyncStorage.getItem('@session_token');
+        return fetch('http://10.0.2.2:3333/api/1.0.0/find?search_in=favourite', {
+          method: 'get',
+          headers: {
+            
+            'x-authorization' : token
+          }
+        })
+        .then((response) => {
+          if(response.status === 200) {
+            console.log("checking the list for fav ")
+            return response.json();
+          }else{
+            throw 'Somthing went wrong';
+          }
+        })  
+  
+        .then(async (responseJson) => {
+          let status = false;
+          for(let i = 0; i<responseJson.length;i++)
+          {
+            if(responseJson[i].location_id === this.state.userData.location_id)
+            {
+              console.log("found in fav");
+              status = true;
+            }
+          }
+          this.setState({isLiked: status});
+          console.log(this.state.isLiked);
+        })
+        
+        .catch((error) => {
+          console.log(error);
+          ToastAndroid.show(error, ToastAndroid.SHORT);
+        })
+      }
+
+      
+    handleMyFav = ()=>{
+      if(this.state.isLiked){
+        this.RmvfromFav();
+        this.setState({"isLiked": false});
+      }
+      else{
+        this.addToFavouriate();
+        this.setState({"isLiked": true});
+      }
+    }
+
  
     logData= () => {
         console.log(this.state.userData.location_reviews.overall_rating);
@@ -141,10 +195,13 @@ class LocatinInfo extends React.Component {
   componentDidMount() {
     //this.logData();
    this.getData();
+   this.checkFav();
+   console.log(this.state.isLiked);
   }
 
   onRefresh = () => {
     this.getData();
+
     console.log("deleting refreshing")
   }
 
@@ -154,43 +211,35 @@ class LocatinInfo extends React.Component {
     if (this.state.isLoading) {
       return (
         <View>
-           <ActivityIndicator size="small" color="#0000ff" />
+           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       )
     }
+    else {
     return (
         <View style={{flex:1 }}>
-            
+            <View style={styles.fixToText}>
                 <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => this.addToFavouriate()}>
-                <Text >like</Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity
                 style={styles.buttonStyle}
-                onPress={() => this.RmvfromFav()}>
-                <Text >remove from my fav</Text>
+                onPress={() => this.handleMyFav()}>
+                <Text >{this.state.isLiked === true? "Unlike" : "like"}</Text>
                 </TouchableOpacity>
-
                 
                 <TouchableOpacity
                 style={styles.buttonStyle}
                 onPress={() => navigator.navigate('add_review',{location_id: this.state.userData.location_id})  }>
                 <Text >add review</Text>
                 </TouchableOpacity>
-
+                </View>
             
             <View  >
 
-            <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => this.logData()}>
-                <Text >log data</Text>
-                </TouchableOpacity>
-            
-            <Text  > Name: {this.state.userData.location_name  }, Town: {this.state.userData.location_town}, Rating: { this.state.userData.avg_overall_rating } </Text>
-                 
+         
+            <View style= {styles.fixToText}>
+            <Text  >{this.state.userData.location_name  } </Text>
+            <Text>{this.state.userData.location_town} </Text><Text>Average Rating: { this.state.userData.avg_overall_rating }</Text> 
+            </View>
             </View> 
 
           
@@ -200,6 +249,8 @@ class LocatinInfo extends React.Component {
             style = {styles.imageStyle}
             source={this.state.userData.photo_path ? {uri: this.state.userData.photo_path } : null}
             />
+
+            <Text style={styles.textStyle}>Users Reviews</Text>
             </View>
 
             
@@ -237,7 +288,6 @@ class LocatinInfo extends React.Component {
             <AirbnbRating
             size ={15}
             count = {5}
-             
               isDisabled ={item.clenliness_rating}
             />
             <Text>quality rating: {item.quality_rating}</Text>
@@ -268,6 +318,7 @@ class LocatinInfo extends React.Component {
     );
   }
 }
+}
 
 const styles = StyleSheet.create({
 
@@ -279,14 +330,28 @@ const styles = StyleSheet.create({
     fontSize: 20,
     
 
-  },
+  }
+  ,
+      fixToText: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+      },
   textStyle: {
-    fontSize: 22,
-    alignSelf: 'flex-start',
-    color: '#007aff',
+    fontSize: 20,
+    alignSelf: 'center',
+    color: '#BA4A00',
     fontWeight: '600',
-    paddingTop: 10,
-    paddingBottom: 10
+    paddingTop: 6,
+    paddingBottom: 6
+  },
+  textHeader: {
+    fontSize: 15,
+    alignSelf: 'center',
+    justifyContent: 'space-evenly',
+    color: '#171919',
+    fontWeight: '600',
+
+    paddingBottom: 6
   },
 
   cancelText: {
