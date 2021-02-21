@@ -202,7 +202,7 @@ class LocatinInfo extends React.Component {
   onRefresh = () => {
     this.getData();
 
-    console.log("deleting refreshing")
+   // console.log("deleting refreshing")
   }
 
   render() {
@@ -236,26 +236,26 @@ class LocatinInfo extends React.Component {
             <View  >
 
          
-            <View style= {styles.fixToText}>
-            <Text  >{this.state.userData.location_name  } </Text>
-            <Text>{this.state.userData.location_town} </Text><Text>Average Rating: { this.state.userData.avg_overall_rating }</Text> 
-            </View>
+              <View style= {styles.fixToText}>
+                  <Text  >{this.state.userData.location_name  } </Text>
+                  <Text>{this.state.userData.location_town} </Text><Text>Average Rating: { this.state.userData.avg_overall_rating }</Text> 
+              </View>
             </View> 
 
           
             
             <View>
-            <Image
-            style = {styles.imageStyle}
-            source={this.state.userData.photo_path ? {uri: this.state.userData.photo_path } : null}
-            />
+              <Image
+              style = {styles.imageStyle}
+              source={this.state.userData.photo_path ? {uri: this.state.userData.photo_path } : null}
+              />
 
-            <Text style={styles.textStyle}>Users Reviews</Text>
+              <Text style={styles.textStyle}>Users Reviews</Text>
             </View>
 
             
             
-                <FlatList
+            <FlatList
                  refreshControl={
                   <RefreshControl
                     refreshing={this.state.refreshing}
@@ -265,56 +265,47 @@ class LocatinInfo extends React.Component {
                 data={this.state.userData.location_reviews}
                 renderItem={({item})=>(
                     
-                    <View style = {styles.fields}>
-                      <View style={styles.fixToText}>
-            <Text>overall rating: {item.overall_rating}</Text>
-            <AirbnbRating
-            size ={15}
-            
-            count = {5}
-            
-             
-           
-            />
-            <Text>price rating: {item.price_rating}</Text>
-            <AirbnbRating
-            size ={15}
-            
-            isDisabled = { item.price_rating}
-            />
-            </View>
-            <View style={styles.fixToText}> 
-            <Text>cleanliness rating: {item.clenliness_rating}</Text>
-            <AirbnbRating
-            size ={15}
-            count = {5}
-              isDisabled ={item.clenliness_rating}
-            />
-            <Text>quality rating: {item.quality_rating}</Text>
-            <AirbnbRating
-            size ={15}
-            isDisabled = {item.quality_rating}
-            count = {5}
-            />
-            </View>
+               <View style = {styles.fields}>
+                  <View style={styles.fixToText}>
+                      <Text>overall rating: </Text>
+                      <AirbnbRating
+                      size ={15}
+                      defaultRating ={item.overall_rating}
+                      isDisabled 
+                      />
+                      <Text>price rating:</Text>
+                      <AirbnbRating
+                      size ={15}
                       
-                     <Text > Review: { item.review_body}</Text>
+                      defaultRating = { item.price_rating}
+                      isDisabled
+                      />
+                  </View>
+               <View style={styles.fixToText}> 
+                  <Text>cleanliness rating: </Text>
+                  <AirbnbRating
+                  size ={15}
+                    defaultRating ={item.clenliness_rating}
+                    isDisabled
+                  />
+                  <Text>quality rating: </Text>
+                  <AirbnbRating
+                  size ={15}
+                  defaultRating = {item.quality_rating}
+                  isDisabled
+                  
+                  />
+               </View>
+                      
+                     <Text style={styles.centeredTxt} >{ item.review_body}</Text>
                            
                     </View>
                     )}
                     keyExtractor= {(item)=> item.review_id.toString()}
-                />
+          />
 
-               
-
-                
-            
             
         </View>
- 
-
-        
-   
     );
   }
 }
@@ -362,6 +353,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10
   },
+  centeredTxt:{
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+    fontSize: 18
+  } ,
 
   buttonStyle: {
     borderRadius: 25,
@@ -392,11 +389,7 @@ const styles = StyleSheet.create({
     borderRadius: 300/15,
     
    
-  },fixToText: {
-    textAlign: 'center',
-  flexDirection: 'row',
-  justifyContent: 'space-evenly',
-},
+  },
 
 })
 
