@@ -5,6 +5,7 @@ import {
   Button,
   ToastAndroid,
   StyleSheet, Text,
+  ActivityIndicator,
   TextInput,
   TouchableOpacity, View
 } from 'react-native';
@@ -50,9 +51,8 @@ class add_review extends Component {
     
     .then((response) => {
       if(response.status === 201) {
-          console.log('addef')
-          console.log(this.state);
-        //return response.json()
+        this.props.navigation.navigate('LocatinInfo');
+       
       }else if(response.status === 400) {
         throw 'Bad req';
       }
@@ -88,6 +88,18 @@ class add_review extends Component {
     }
 
   render() {
+    if (this.state.isLoading) {
+        return (
+          <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+  
+        )
+      }
+
+      else{
+
+      
     
     return (
       <View>
@@ -132,7 +144,6 @@ class add_review extends Component {
             <TextInput
               placeholder="Enter review_body..."
               style={styles.formInput}
-              keyboardType = 'number-pad'
               onChangeText={(review_body) => 
                  this.setState({review_body})}
             
@@ -151,6 +162,7 @@ class add_review extends Component {
       </View>
     );
   }
+}
 }
 
 const styles = StyleSheet.create({
