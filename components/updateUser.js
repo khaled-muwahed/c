@@ -129,10 +129,12 @@ class Update extends React.Component {
     if (this.state.isLoading) {
       return (
         <View>
-          <ActivityIndicator />
+        <ActivityIndicator size="large" color="#0000ff" />
         </View>
+
       )
     }
+    else {
     return (
       <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
         <Text style={styles.textStyle} >Update user info</Text>
@@ -159,6 +161,7 @@ class Update extends React.Component {
       </View>
     );
   }
+}
 }
 
 const styles = StyleSheet.create({
