@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { Rating, AirbnbRating } from 'react-native-ratings';
 
 //import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View,Image,Use, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View,Image,Use,RefreshControl, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LocatinInfo extends React.Component {
@@ -9,23 +10,20 @@ class LocatinInfo extends React.Component {
   constructor(props) {
 
     super(props);
-   
-     /*   location_id: '',
-        location_name:'',
-        location_town:'',
-        latitude:'',
-        longitude:'',
-        photo_path:'',
-        avg_overall_rating:'',
-        avg_price_rating:'',
-        avg_quality_rating:'',
-        avg_clenliness_rating:'',
-        location_reviews:[],*/
+  
         this.state = {
-
+          refreshing: false,
+          setRefreshing: false,
+          isDisabled: false,
           isLoading: true,
           userData: null,
-          clicked_location_id: this.props.route.params.location_id
+          clicked_location_id: this.props.route.params.location_id,
+          overall_rating: 0,
+          
+             price_rating: 0,
+            quality_rating: 0,
+            clenliness_rating: 0,
+      
         };
      
   
@@ -56,6 +54,9 @@ class LocatinInfo extends React.Component {
        this.setState ({
         isLoading: false,
         userData : responseJson
+        
+
+
       });
         
       /*  this.setState({'location_id': responseJson.location_id});
@@ -133,13 +134,18 @@ class LocatinInfo extends React.Component {
 
  
     logData= () => {
-        console.log('http://10.0.2.2:3333/api/1.0.0/location/'+this.state.clicked_location_id);
+        console.log(this.state.userData.location_reviews.overall_rating);
     }
    
       
   componentDidMount() {
     //this.logData();
    this.getData();
+  }
+
+  onRefresh = () => {
+    this.getData();
+    console.log("deleting refreshing")
   }
 
   render() {
@@ -176,6 +182,12 @@ class LocatinInfo extends React.Component {
 
             
             <View  >
+
+            <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => this.logData()}>
+                <Text >log data</Text>
+                </TouchableOpacity>
             
             <Text  > Name: {this.state.userData.location_name  }, Town: {this.state.userData.location_town}, Rating: { this.state.userData.avg_overall_rating } </Text>
                  
@@ -193,14 +205,51 @@ class LocatinInfo extends React.Component {
             
             
                 <FlatList
+                 refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.onRefresh}
+                  />
+                }
                 data={this.state.userData.location_reviews}
                 renderItem={({item})=>(
                     
                     <View style = {styles.fields}>
-                        <Text >{"overall_rating: " + item.overall_rating
-                        }</Text>
-                        <Text >{"review_body: " + item.review_body}</Text>
-                        <Text>{}</Text>        
+                      <View style={styles.fixToText}>
+            <Text>overall rating: {item.overall_rating}</Text>
+            <AirbnbRating
+            size ={15}
+            
+            count = {5}
+            
+             
+           
+            />
+            <Text>price rating: {item.price_rating}</Text>
+            <AirbnbRating
+            size ={15}
+            
+            isDisabled = { item.price_rating}
+            />
+            </View>
+            <View style={styles.fixToText}> 
+            <Text>cleanliness rating: {item.clenliness_rating}</Text>
+            <AirbnbRating
+            size ={15}
+            count = {5}
+             
+              isDisabled ={item.clenliness_rating}
+            />
+            <Text>quality rating: {item.quality_rating}</Text>
+            <AirbnbRating
+            size ={15}
+            isDisabled = {item.quality_rating}
+            count = {5}
+            />
+            </View>
+                      
+                     <Text > Review: { item.review_body}</Text>
+                           
                     </View>
                     )}
                     keyExtractor= {(item)=> item.review_id.toString()}
@@ -278,7 +327,11 @@ const styles = StyleSheet.create({
     borderRadius: 300/15,
     
    
-  },
+  },fixToText: {
+    textAlign: 'center',
+  flexDirection: 'row',
+  justifyContent: 'space-evenly',
+},
 
 })
 
