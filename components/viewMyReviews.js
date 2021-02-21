@@ -1,6 +1,6 @@
 import * as React from 'react';
 //import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator, Text,RefreshControl, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 class ViewReviews extends React.Component {
    
@@ -8,6 +8,8 @@ class ViewReviews extends React.Component {
 
     super(props);
     this.state = {
+        refreshing: false,
+        setRefreshing: false,
 
       isLoading: true,
       userData: null
@@ -87,6 +89,13 @@ class ViewReviews extends React.Component {
     updateReview = () => {
     this.props.navigation.navigate('update_review',{location_id: item.location_id,review_id: item.review_id});
     }
+
+    onRefresh = () => {
+        this.getData();
+        console.log("deleting refreshing")
+      }
+
+
     logDataTesting = (x,y) => {
        // console.log()
     }
@@ -125,9 +134,18 @@ class ViewReviews extends React.Component {
               
 
                <FlatList
+               refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh}
+                />
+              }
+
+
+
                 data={this.state.userData.reviews}
                  renderItem={({item})=>(
-                <View>
+                    <View style = {styles.fields}>
                    
                         <Text style = {styles.clickable} >{item.review.review_id + " " +item.review.review_body 
                         }</Text>
@@ -143,7 +161,7 @@ class ViewReviews extends React.Component {
                         />
                         <Button
                         title="Delete"
-                        onPress={() => this.deleteReview(item.location.location_id , item.review.review_id)}
+                        onPress={() => this.deleteReview(item.location.location_id , item.review.review_id) + this.onRefresh()}
                         />
                         </View>
                         <Text>{}</Text>
@@ -166,6 +184,15 @@ class ViewReviews extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    fields: {
+        margin: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
+        marginVertical: 15,
+        fontSize: 20,
+        
+    
+      },
     container: {
         flex: 1,
         justifyContent: 'center',
