@@ -111,33 +111,7 @@ class Home extends Component {
       console.log("redsfsfres")
     }
 
-  /*  
-   <View style={styles.fixToText}>
-        <Button
-         style={styles.button}
-         onPress={this.signOut}
-        >
-         <Text>logout</Text>
-        </Button>
 
-        <Button
-         style={styles.button}
-         onPress={this.updateUser}
-        >
-         <Text>go to update page</Text>
-        </Button>  
-
-        <Button
-         style={styles.button}
-         onPress={this.getUserDetails}
-        >
-         <Text>show your details</Text>
-        </Button>
-        
-  
-       
-      </View>
-  */
   
 
  render() {
