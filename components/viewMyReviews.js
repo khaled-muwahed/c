@@ -2,6 +2,8 @@ import * as React from 'react';
 //import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, Text,RefreshControl, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Rating, AirbnbRating } from 'react-native-ratings';
+
 class ViewReviews extends React.Component {
    
   constructor(props) {
@@ -84,6 +86,7 @@ class ViewReviews extends React.Component {
   componentDidMount() {
 
     this.getData();
+    //this.onRefresh();
     }
 
     updateReview = () => {
@@ -125,12 +128,10 @@ class ViewReviews extends React.Component {
         <SafeAreaView style={styles.container}>
                
                     
-              <Text >Name: {this.state.userData.first_name + " " + this.state.userData.last_name  }</Text>
-              <Text >My Reviews</Text>
+              <Text style= {styles.txtInitials}>{this.state.userData.first_name + " " + this.state.userData.last_name  }</Text>
+              <Text style= {styles.headLine}>My Reviews</Text>
                   
-              
-
-               <FlatList
+              <FlatList
                refreshControl={
                 <RefreshControl
                   refreshing={this.state.refreshing}
@@ -143,11 +144,44 @@ class ViewReviews extends React.Component {
                 data={this.state.userData.reviews}
                  renderItem={({item})=>(
                     <View style = {styles.fields}>
+                      <Text style = {styles.centeredTxt}> {item.location.location_name  } </Text>
+                       
+                        <View style={styles.fixToText}>
+                            <Text style={styles.textAdjust}>overall rating: </Text>
+                            <AirbnbRating
+                            size ={15}
+                            defaultRating ={item.review.overall_rating}
+                            isDisabled 
+                            />
+                            <Text style={styles.textAdjust}>price rating:</Text>
+                            <AirbnbRating
+                            size ={15}
+                            
+                            defaultRating = { item.review.price_rating}
+                            isDisabled
+                            />
+                        </View>
+
+                            <View style = {styles.fixToText}>
+                            <Text style={styles.textAdjust}>cleanliness rating: </Text>
+                            <AirbnbRating
+                            size ={15}
+                              defaultRating ={item.review.clenliness_rating}
+                              isDisabled
+                            />
+                            <Text style={styles.textAdjust}>quality rating: </Text>
+                            <AirbnbRating
+                            size ={15}
+                            defaultRating = {item.review.quality_rating}
+                            isDisabled
+                            
+                            />
+
+                        </View>
+
+                        <Text style={styles.centeredTxt} >{ item.review.review_body}</Text>
                    
-                        <Text style = {styles.clickable} >{item.review.review_id + " " +item.review.review_body 
-                        }</Text>
-                        <Text style = {styles.clickable} >{item.review.clenliness_rating 
-                        } review clean rating</Text>
+                       
                         
                         
                         <View style={styles.fixToText}>
@@ -168,6 +202,11 @@ class ViewReviews extends React.Component {
                     keyExtractor= {(item)=> item.review.review_id.toString()}
 
                     />
+                
+
+
+
+               
                 
 
             </SafeAreaView>
@@ -195,19 +234,50 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal: 16,
       },
+      textAdjust:{
+        marginBottom: 20,
+        
+        
+        //marginTop: 10
+      },
       title: {
         textAlign: 'center',
         marginVertical: 8,
       },
+      centeredTxt:{
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontFamily: 'sans-serif',
+        fontSize: 16,
+        marginBottom: 20,
+        marginTop: 10
+      } ,
       fixToText: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
+        
+        
       },
+    
+      txtInitials:{
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: '#0B92F2',
+        fontSize: 20
+    } ,
+    headLine:{
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: '#000000',
+        fontSize: 18,
+        paddingBottom: 20
+    } ,
       separator: {
         marginVertical: 8,
         borderBottomColor: '#737373',
         borderBottomWidth: StyleSheet.hairlineWidth,
       },
+      
 
 })
 
