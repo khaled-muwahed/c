@@ -24,6 +24,10 @@ class SearchUser extends Component {
           q: '',
           locations: null,
           overall_rating: 0,
+          
+             price_rating: 0,
+            quality_rating: 0,
+            clenliness_rating: 0,
         };
       }
 
@@ -68,6 +72,17 @@ class SearchUser extends Component {
           if (this.state.overall_rating > 0){
               url += "overall_rating=" + this.state.overall_rating + "&";
           }
+
+          if (this.state.clenliness_rating > 0){
+            url += "clenliness_rating=" + this.state.clenliness_rating + "&";
+            }
+            if (this.state.price_rating > 0){
+                url += "price_rating=" + this.state.price_rating + "&";
+                }
+                if (this.state.quality_rating > 0){
+                    url += "quality_rating=" + this.state.quality_rating + "&";
+                    }
+
           console.log(url);
 
           this.search(url)
@@ -95,7 +110,7 @@ class SearchUser extends Component {
 
 
   render() {
-    
+    const navigator = this.props.navigation;
     return (
       <View>
 
@@ -103,17 +118,37 @@ class SearchUser extends Component {
             <TextInput
               placeholder="Enter an a word to search for..."
               style={styles.formInput}
-              onChangeText={(q) => this.setState({q: q})}
+              onChangeText={(q) => this.setState({q: q}) + this.onRefresh()}
               value={this.state.q}
             />
-
+            <View style={styles.fixToText}>
             <Text>overall rating</Text>
             <AirbnbRating
             size ={15}
             defaultRating = {0}
-            onFinishRating = {(rating) => this.ratingDone(rating , "overall_rating")}
-
+            onFinishRating = {(rating) => this.ratingDone(rating , "overall_rating") + this.onRefresh()}
             />
+            <Text>price rating</Text>
+            <AirbnbRating
+            size ={15}
+            defaultRating = {0}
+            onFinishRating = {(rating) => this.ratingDone(rating , "price_rating") + this.onRefresh()}
+            />
+            </View>
+            <View style={styles.fixToText}> 
+            <Text>cleanliness rating</Text>
+            <AirbnbRating
+            size ={15}
+            defaultRating = {0}
+            onFinishRating = {(rating) => this.ratingDone(rating , "clenliness_rating") + this.onRefresh()}
+            />
+            <Text>quality rating</Text>
+            <AirbnbRating
+            size ={15}
+            defaultRating = {0}
+            onFinishRating = {(rating) => this.ratingDone(rating , "quality_rating") + this.onRefresh()}
+            />
+            </View>
             <Button
             title = "Search"
             onPress = {() => this.searchUrl()}
@@ -126,7 +161,7 @@ class SearchUser extends Component {
                     onRefresh={this.onRefresh}
                   />
                 }
-                 style = {styles.fields}
+                
                 data={this.state.locations}
                 renderItem={({item})=>(
 
@@ -135,7 +170,9 @@ class SearchUser extends Component {
                       
                       < Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>
                           {"Name: " + item.location_name}</Text>
-                        <Text >{"overall_rating: " + item.avg_overall_rating
+                        <Text >overall_rating: {item.avg_overall_rating
+                        }</Text>
+                        <Text >Price Rating: { item.avg_overall_rating
                         }</Text>
                         
                         <Text>{}</Text>        
@@ -161,6 +198,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     padding: 10,
     fontSize: 25,
+  },
+  fixToText: {
+      textAlign: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  clickable: {
+    fontWeight: "bold",
+    fontSize: 25,
+    textDecorationLine : "underline"
+
   },
   formItem: {
     padding: 20,
