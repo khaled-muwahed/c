@@ -1,6 +1,6 @@
 import * as React from 'react';
 //import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View, TextInput,RefreshControl, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 class getUser extends React.Component {
    
@@ -8,6 +8,8 @@ class getUser extends React.Component {
 
     super(props);
     this.state = {
+      refreshing: false,
+      setRefreshing: false,
 
       isLoading: true,
       userData: null
@@ -51,24 +53,6 @@ class getUser extends React.Component {
         });
 
 
-        //console.log(this.state.info + " the response");
-        
-       /* this.setState({'first_name': responseJson.first_name});
-        this.setState({'last_name': responseJson.last_name});
-        this.setState({'email': responseJson.email});
-        this.setState({'favourite_locations' : responseJson.favourite_locations});
-        this.setState({'liked_reviews' : responseJson.liked_reviews});
-        this.setState({'reviews' : responseJson.reviews});
-        this.setState({'user_id' : responseJson.user_id});
-
-        this.setState({'review' : responseJson.review});
-
-        */
-
-       //  console.log(this.state);
-
-
-        
         
 
       })
@@ -86,6 +70,11 @@ class getUser extends React.Component {
   componentDidMount() {
 
     this.getData();
+    }
+
+    onRefresh = () => {
+      this.getData();
+     // console.log("redsfsfres")
     }
     coffeeDInfo = () => {
     this.props.navigation.navigate('LocatinInfo',{location_id: item.location_id});
@@ -147,6 +136,12 @@ class getUser extends React.Component {
                </TouchableOpacity>
 
                 <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.onRefresh}
+                  />
+                }
                 showsVerticalScrollIndicator
                           
                 data={this.state.userData.favourite_locations}
