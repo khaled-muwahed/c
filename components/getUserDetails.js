@@ -13,16 +13,7 @@ class getUser extends React.Component {
 
       isLoading: true,
       userData: null
-/*
-      first_name: '',
-      last_name: '',
-      email: '',
-      favourite_locations: [],
-      liked_reviews: [],
-      reviews: [],
-      user_id: '',
-      review:'',
-      info:{}*/
+
     };
 
   }
@@ -80,25 +71,7 @@ class getUser extends React.Component {
     this.props.navigation.navigate('LocatinInfo',{location_id: item.location_id});
     }
 
-     
-
-    /*storeLocationId = async (locatin_id) => {
-        try {
-          console.log('hey')
-          await AsyncStorage.setItem('location Id', JSON.stringify(locatin_id))
-          console.log("Location => " + locatin_id);
-          
-        } catch (e) {
-        }
-      }
-*/
-/*
-      displayLocId = () => {
-        let id = await  AsyncStorage.getItem('locatin_id');
-        console.log(id);
-        }
-
-*/ 
+    
 
 
   render() {
@@ -123,14 +96,19 @@ class getUser extends React.Component {
     return (
             <View style={{flex:1}}>
                
-                    
-              <Text >Name: {this.state.userData.first_name + " " + this.state.userData.last_name  }</Text>
-              <Text >Email: {this.state.userData.email}</Text>
+                    <View style={styles.fixToText}> 
+              <Text style={styles.txtInitials}>Name: {this.state.userData.first_name + " " + this.state.userData.last_name  }</Text>
+              <Text style={styles.txtInitials}>,Email: {this.state.userData.email}</Text>
+              </View>
+
+             
                   
               <TouchableOpacity style ={styles.buttonStyle}
                onPress={() => navigator.navigate('ViewReviews')  }>
                <Text >View my Reviews</Text>
                </TouchableOpacity>
+
+               <Text style= {styles.headLine}>My favourite locations</Text>
 
                 <FlatList
                 refreshControl={
@@ -143,7 +121,7 @@ class getUser extends React.Component {
                           
                 data={this.state.userData.favourite_locations}
                 renderItem={({item})=>(
-                <View>
+                <View style= {styles.fields}>
                     <View > 
                     <Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>{item.location_name 
                     }</Text>
@@ -193,7 +171,24 @@ const styles = StyleSheet.create({
 
   }
   ,
-
+  headLine:{
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#000000',
+    fontSize: 18,
+    paddingBottom: 20
+  } ,
+  txtInitials:{
+    
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#0B92F2',
+    fontSize: 15  
+  } , 
+  fixToText: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
   cancelText: {
     fontSize: 22,
     alignSelf: 'center',
@@ -204,12 +199,14 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
+    alignSelf: 'center',
     borderRadius: 25,
     borderWidth: 2,
     borderColor: '#007aff',
     marginLeft: 20,
     marginRight: 20,
-    padding: 9,
+    padding: 10,
+    marginTop:10,
     marginBottom: 15,
   },
   cancelStyle: {
