@@ -3,10 +3,12 @@ import {
   ScrollView,
   Button,
   ToastAndroid,
+  
   StyleSheet, Text,
   TextInput,
   TouchableOpacity, View
 } from 'react-native';
+import { Rating, AirbnbRating } from 'react-native-ratings';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class update_review extends Component {
@@ -14,13 +16,14 @@ class update_review extends Component {
     super(props);
 
     this.state = {
-      overall_rating: '',
-      price_rating: '',
-      quality_rating: '',
-      clenliness_rating: '',
+      overall_rating: 0,
+      price_rating: 0,
+      quality_rating: 0,
+      clenliness_rating: 0,
       review_body:'',
       clicked_location_id: this.props.route.params.location_id,
-      clicked_review_id: this.props.route.params.review_id
+      clicked_review_id: this.props.route.params.review_id,
+      
     }
   }
 
@@ -37,10 +40,12 @@ class update_review extends Component {
         'x-authorization' : token
       },
       body: JSON.stringify({
-        overall_rating: parseInt( this.state.overall_rating),
-        price_rating: parseInt( this.state.price_rating),
-        quality_rating: parseInt( this.state.quality_rating),
-        clenliness_rating: parseInt( this.state.clenliness_rating),
+      
+
+        overall_rating:  this.state.overall_rating,
+        price_rating:  this.state.price_rating,
+        quality_rating: this.state.quality_rating,
+        clenliness_rating: this.state.clenliness_rating,
         review_body: this.state.review_body
       
       })
@@ -48,7 +53,7 @@ class update_review extends Component {
     .then((response) => {
       if(response.status === 200) {
           console.log('Review Updated')
-          ToastAndroid.show("review Updated", ToastAndroid.show);
+          //ToastAndroid.show("review Updated", ToastAndroid.show);
           this.props.navigation.navigate('ViewReviews');
      
       }else if(response.status === 400) {
@@ -84,69 +89,72 @@ logTxt= () => {
     console.log(this.state.review_body);
 }
 
+ratingDone   (rating , name) {
+    let stateObj = () => {
+        let returnObj = {};
+        returnObj[name] = rating;
+        return returnObj;
+    };
+    this.setState (stateObj);
+
+}
+
+
+
 componentDidMount() {
 
     //
     }
 
   render() {
+      
+ 
+
+      
     
     return (
       <View>
         <ScrollView>
           <Text style={styles.title}>update review</Text>
 
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>overall_rating:</Text>
-            <TextInput
-              placeholder="Enter overall_rating.."
-              style={styles.formInput}
-              keyboardType = 'number-pad'
-              onChangeText={(overall_rating) =>
-                 this.setState({overall_rating} )}
-              value={parseInt( this.state.overall_rating)}
+          <View style={styles.fixToText}>
+            <Text>overall rating</Text>
+            <AirbnbRating
+            size ={15}
+            count = {5}
+            defaultRating = {0}
+            onFinishRating = {(rating) => this.ratingDone(rating , "overall_rating")}
             />
-          </View>
-
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>price_rating :</Text>
-            <TextInput
-              placeholder="Enter price_rating..."
-              style={styles.formInput}
-              keyboardType = 'number-pad'
-              onChangeText={(price_rating) => this.setState({price_rating})}
-              value={parseInt( this.state.price_rating)}
+            <Text>price rating</Text>
+            <AirbnbRating
+            size ={15}
+            count = {5}
+            defaultRating = {0}
+            onFinishRating = {(rating) => this.ratingDone(rating , "price_rating") }
             />
-          </View>
-
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>quality_rating:</Text>
-            <TextInput
-              placeholder="Enter quality_rating..."
-              style={styles.formInput}
-              keyboardType = 'number-pad'
-              onChangeText={(quality_rating) => this.setState({quality_rating})}
-              value={parseInt( this.state.quality_rating)}
+            </View>
+            <View style={styles.fixToText}> 
+            <Text>cleanliness rating</Text>
+            <AirbnbRating
+            size ={15}
+            count= {5}
+            defaultRating = {0}
+            onFinishRating = {(rating) => this.ratingDone(rating , "clenliness_rating")}
             />
-          </View>
-
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>clenliness_rating:</Text>
-            <TextInput
-              placeholder="Enter clenliness_rating..."
-              style={styles.formInput}
-              keyboardType = 'number-pad'
-              onChangeText={(clenliness_rating) => this.setState({clenliness_rating})}
-              value={parseInt( this.state.clenliness_rating)}
+            <Text>quality rating</Text>
+            <AirbnbRating
+            size ={15}
+            count= {5}
+            defaultRating = {0}
+            onFinishRating = {(rating) => this.ratingDone(rating , "quality_rating") }
             />
-          </View>
+            </View>
 
           <View style={styles.formItem}>
             <Text style={styles.formLabel}>review_body:</Text>
             <TextInput
               placeholder="Enter review_body..."
               style={styles.formInput}
-              keyboardType = 'number-pad'
               onChangeText={(review_body) => 
                  this.setState({review_body})}
             
@@ -164,7 +172,9 @@ componentDidMount() {
         </ScrollView>
       </View>
     );
-  }
+  
+    }
+
 }
 
 const styles = StyleSheet.create({
@@ -174,6 +184,11 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 25,
   },
+  fixToText: {
+    textAlign: 'center',
+  flexDirection: 'row',
+  justifyContent: 'space-evenly',
+},
   formItem: {
     padding: 20,
   },
