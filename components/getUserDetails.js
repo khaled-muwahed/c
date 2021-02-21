@@ -109,12 +109,9 @@ class getUser extends React.Component {
       console.log('get data rendering');
     if (this.state.isLoading) {
       return (
-        <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator />
-        <ActivityIndicator size="large" />
-        <ActivityIndicator size="small" color="#0000ff" />
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
+        <View>
+        <ActivityIndicator size="large" color="#0000ff" />
+        </View>
 
       )
     }

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
   RefreshControl,
   FlatList
   ,
@@ -141,8 +142,19 @@ class Home extends Component {
 
  render() {
     const navigator = this.props.navigation;
+    if (this.state.isLoading) {
+      return (
+        <View>
+        <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+
+      )
+    }
+    else {
         
     return (
+
+      
     <View> 
       <View style={styles.fixToText}>
         <Button
@@ -195,6 +207,8 @@ class Home extends Component {
      
     )
   }
+
+}
 }
 const styles = StyleSheet.create({
     container: {
