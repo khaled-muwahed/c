@@ -144,7 +144,7 @@ class ViewReviews extends React.Component {
                 data={this.state.userData.reviews}
                  renderItem={({item})=>(
                     <View style = {styles.fields}>
-                      <Text style = {styles.centeredTxt}> {item.location.location_name  } </Text>
+                      <Text style = {styles.centeredTxt}> {item.location.location_name  }, {item.location.location_town  } </Text>
                        
                         <View style={styles.fixToText}>
                             <Text style={styles.textAdjust}>overall rating: </Text>
