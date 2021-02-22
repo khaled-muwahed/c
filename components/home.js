@@ -29,6 +29,10 @@ class Home extends Component {
     };
 
   }
+  /*
+  static navigationOptions = {
+    headerLeft: null
+  } */
 
 
     displayCoffeeShops = async () => {
@@ -103,8 +107,13 @@ class Home extends Component {
 
   componentDidMount() {
     this.displayCoffeeShops();
+    
     //this.getData();
     }
+    /*ComponentWillMount(){
+      BackHandler.addEventListener('hardwareBackPress', function() {return true}) 
+
+    } */
 
     onRefresh = () => {
       this.displayCoffeeShops();
@@ -164,9 +173,9 @@ class Home extends Component {
                     <View style = {styles.fields}>
                       
                       < Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>
-                          {"Name: " + item.location_name}</Text>
-                        <Text >{"overall_rating: " + item.avg_overall_rating
-                        }</Text>
+                          {item.location_name}</Text>
+                          <Text>Location: {item.location_town}</Text>
+                        <Text >overall_rating: { item.avg_overall_rating }</Text>
                         
                         <Text>{}</Text>        
                     </View>
