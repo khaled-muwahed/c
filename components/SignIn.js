@@ -75,6 +75,9 @@ class SignIn extends Component {
   }
   }
 
+
+  
+
   
 
   render() {
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#A59814',
+    borderColor: '#CC8D17',
    // marginLeft: 20,
    // marginRight: 20,
     padding: 10,
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
   },
   formInput: {
     borderWidth: 1,
-    borderColor: 'lightblue',
+    borderColor: '#CC8D17',
     borderRadius: 20,
   },
   formTouch: {
@@ -187,7 +190,7 @@ const styles = StyleSheet.create({
   formTouchText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'steelblue',
+    color: '#CC8D17',
   },
 
   container: {
