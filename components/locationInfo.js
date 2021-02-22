@@ -16,7 +16,10 @@ class LocatinInfo extends React.Component {
           setRefreshing: false,
           isDisabled: false,
           isLoading: true,
-          isLiked: false,
+          isLikedLocation: false,
+          isLikedReview: false,
+          likes: 0, 
+          
           userData: null,
           clicked_location_id: this.props.route.params.location_id,
           overall_rating: 0,
@@ -61,6 +64,8 @@ class LocatinInfo extends React.Component {
 
 
       });
+     /* this.setState({'likes': responseJson.location_reviews.likes});
+      console.log(this.state.likes , "Likes number");*/
         
       })
       .catch((error) => {
@@ -118,6 +123,80 @@ class LocatinInfo extends React.Component {
         this.props.navigation.navigate('Update');
     }
 
+      likeReview = async (loc_id,rev_id) => {
+        let token = await  AsyncStorage.getItem('@session_token');
+      return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ loc_id +"/review/"+rev_id +"/like", {
+      
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-authorization' : token
+        },
+      })
+      .then((response) => {
+        if(response.status === 200) {
+          this.setState ({isLikedReview: true});
+            console.log('liked')
+          //return response.json()
+        }else if(response.status === 400) {
+          throw 'Bad req';
+        }
+          else if(response.status === 401) {
+          throw 'unautorised';
+        }
+        else if(response.status === 500) {
+          throw 'server error';
+        }
+        else{
+          throw 'Somthing went wrong';
+        }
+      })
+    
+      .catch((error) => {
+        console.log(error);
+        ToastAndroid.show(error, ToastAndroid.SHORT);
+      })
+       }
+
+    unLikeReview = async (loc_id,rev_id) => {
+      let token = await  AsyncStorage.getItem('@session_token');
+    return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ loc_id +"/review/"+rev_id +"/like", {
+    
+      method: 'delete',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-authorization' : token
+      },
+    })
+    .then((response) => {
+      if(response.status === 200) {
+          console.log('unliked')
+          this.setState ({isLikedReview: false});
+        //return response.json()
+      }else if(response.status === 404) {
+        throw 'not found';
+      }
+        else if(response.status === 401) {
+        throw 'unautorised';
+      }
+      else if(response.status === 403) {
+        throw 'unautorised';
+      }
+      else if(response.status === 500) {
+        throw 'server error';
+      }
+      else{
+        throw 'Somthing went wrong';
+      }
+    })
+  
+    .catch((error) => {
+      console.log(error);
+      ToastAndroid.show(error, ToastAndroid.SHORT);
+    })
+    
+  }
+
 
 
     
@@ -162,7 +241,7 @@ class LocatinInfo extends React.Component {
               status = true;
             }
           }
-          this.setState({isLiked: status});
+          this.setState({isLikedLocation: status});
          
         })
         
@@ -175,15 +254,27 @@ class LocatinInfo extends React.Component {
       
     handleMyFav = async ()=>{
       
-       if(this.state.isLiked){
+       if(this.state.isLikedLocation){
         this.RmvfromFav();
-        this.setState({"isLiked": false});
+        this.setState({"isLikedLocation": false});
       }
       else{
         this.addToFavouriate();
-        this.setState({"isLiked": true});
+        this.setState({"isLikedLocation": true});
       }
     }
+    handleLikedReviews = async (loc , rev)=>{
+      
+      if(this.state.isLikedReview){
+       this.unLikeReview(loc , rev);
+       this.setState({"isLikedReview": false});
+       
+     }
+     else{
+       this.likeReview(loc , rev);
+       this.setState({"isLikedLocation": true});
+     }
+   }
 
  
     logData= () => {
@@ -197,7 +288,7 @@ class LocatinInfo extends React.Component {
     
  
    
-   console.log(this.state.isLiked);
+   console.log(this.state.isLikedLocation);
   }
 
   onRefresh = () => {
@@ -205,6 +296,8 @@ class LocatinInfo extends React.Component {
 
    // console.log("deleting refreshing")
   }
+
+ 
 
   render() {
     const navigator = this.props.navigation;
@@ -224,7 +317,7 @@ class LocatinInfo extends React.Component {
 
                 style={styles.buttonStyle}
                 onPress={() => this.handleMyFav()}>
-                <Text >{this.state.isLiked === true? "Unlike" : "like"}</Text>
+                <Text >{this.state.isLikedLocation === true? "♥" : "♡"}</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity
@@ -243,16 +336,7 @@ class LocatinInfo extends React.Component {
               </View>
             </View> 
 
-          
-            
-            <View>
-              <Image
-              style = {styles.imageStyle}
-              source={this.state.userData.photo_path ? {uri: this.state.userData.photo_path } : null}
-              />
-
-              <Text style={styles.textStyle}>Users Reviews</Text>
-            </View>
+        
 
             
             
@@ -296,10 +380,16 @@ class LocatinInfo extends React.Component {
                   isDisabled
                   
                   />
-               </View>
-                      
+               </View> 
                      <Text style={styles.centeredTxt} >{ item.review_body}</Text>
-                           
+                     <TouchableOpacity
+                
+
+                      style={styles.buttonStyle}
+                      onPress={() => this.handleLikedReviews(this.state.userData.location_id ,item.review_id) }>
+                        
+                      <Text > {this.state.isLikedReview === true? "♥" : "♡" } </Text>
+                      </TouchableOpacity>
                     </View>
                     )}
                     keyExtractor= {(item)=> item.review_id.toString()}
@@ -362,6 +452,7 @@ const styles = StyleSheet.create({
   } ,
 
   buttonStyle: {
+    alignSelf: 'center',
     borderRadius: 25,
     borderWidth: 2,
     borderColor: '#007aff',
