@@ -20,6 +20,7 @@ import add_review from './components/addReview';
 import ViewReviews from './components/viewMyReviews';
 import update_review from './components/updateReview';
 import SearchUser from './components/search';
+import ViewLikedReviews from './components/viewLikedReviews';
 const Stack = createStackNavigator();
 
 class App extends React.Component {
@@ -41,6 +42,8 @@ render()
         <Stack.Screen name= "ViewReviews" component = {ViewReviews}></Stack.Screen>
         <Stack.Screen name= "update_review" component = {update_review}></Stack.Screen>
         <Stack.Screen name= "SearchUser" component = {SearchUser}></Stack.Screen>
+        <Stack.Screen name= "ViewLikedReviews" component = {ViewLikedReviews}></Stack.Screen>
+        
         
         
         
