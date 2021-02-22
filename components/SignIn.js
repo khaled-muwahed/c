@@ -7,9 +7,11 @@ import {
   Button,
   ToastAndroid,
   StyleSheet, Text,
-  TextInput,
+  TextInput, ImageBackground,
   TouchableOpacity, View
 } from 'react-native';
+const image = { uri: "https://ucarecdn.com/827ee316-742d-4b4c-8411-ae9f7d3a4052/coffidaa.jpeg" };
+
 
 class SignIn extends Component {
   constructor(props) {
@@ -64,6 +66,7 @@ class SignIn extends Component {
       await AsyncStorage.setItem('@user_id', JSON.stringify(responseJson.id));
       ToastAndroid.show("Login successful", ToastAndroid.SHORT);
       this.props.navigation.navigate('home');
+      
     })
     .catch((error) => {
       console.log(error);
@@ -77,73 +80,108 @@ class SignIn extends Component {
   render() {
     const navigator = this.props.navigation;
     return (
-      <View>
-        <ScrollView>
-          <Text style={styles.title}>Log In</Text>
+    <View style={styles.container}>
+      <ImageBackground source={image} style={styles.image}>
+        <Text style={styles.titleStyle}>Log In</Text>
 
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>Email:</Text>
-            <TextInput
-              placeholder="Enter an email..."
-              style={styles.formInput}
-              onChangeText={(email) => this.setState({email})}
-              value={this.state.email}
-            />
-          </View>
+        <View style={styles.formItem}>
+          <Text style={styles.formLabel}>Email:</Text>
+          <TextInput
+            placeholder="Enter an email..."
+            style={styles.formInput}
+            onChangeText={(email) => this.setState({email})}
+            value={this.state.email}
+          />
+        </View>
 
-          <View style={styles.formItem}>
-            <Text style={styles.formLabel}>Password:</Text>
-            <TextInput
-            
-              placeholder="Enter password..."
-              style={styles.formInput}
-              secureTextEntry
-              onChangeText={(password) => this.setState({password})}
-              value={this.state.password}
-            />
-          </View>
-
-          <View style={styles.formItem}>
+        <View style={styles.formItem}>
+        <Text style={styles.formLabel}>Password:</Text>
+        <TextInput
+        
+          placeholder="Enter password..."
+          style={styles.formInput}
+          secureTextEntry
+          onChangeText={(password) => this.setState({password})}
+          value={this.state.password}
+        />
+        </View>
+        
+          <View style = {styles.formItem}> 
             <TouchableOpacity
-              style={styles.formTouch}
+              style={styles.buttonStyle}
               onPress={() => this.signIn()}>
               <Text style={styles.formTouchText}>Sign In</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.formTouch}
-              onPress={() => navigator.navigate('signup')}>
-              <Text style={styles.formTouchText}>Go to sign up</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
+            
+          
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => navigator.navigate('signup')}>
+                <Text style={styles.formTouchText}>Go to sign up</Text>
+              </TouchableOpacity>
+              
+        </View>
+      
+       </ImageBackground>
+    </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   title: {
-    color: 'steelblue',
-    backgroundColor: 'lightblue',
+    color: '#CCBB17',
+   // backgroundColor: 'lightblue',
     padding: 10,
     fontSize: 25,
   },
-  formItem: {
-    padding: 20,
+  
+  buttonStyle: {
+    alignSelf: 'flex-start',
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#A59814',
+   // marginLeft: 20,
+   // marginRight: 20,
+    padding: 10,
+    marginBottom: 12,
+    
+    marginTop: 5,
   },
+  titleStyle:{
+    marginTop : 50,
+    color: '#CC8D17',
+   // backgroundColor: 'lightblue',
+    padding: 10,
+    fontSize: 25,
+
+  },
+
+
+
+  formItem: {
+    
+    padding: 10,
+    marginTop: 5,
+//marginBottom: 0
+  },
+  
   formLabel: {
     fontSize: 15,
-    color: 'steelblue',
+    color: '#CC8D17',
+    marginTop: -20,
+   // marginBottom: 10
+  
   },
   formInput: {
     borderWidth: 1,
     borderColor: 'lightblue',
-    borderRadius: 5,
+    borderRadius: 20,
   },
   formTouch: {
-    backgroundColor: 'lightblue',
-    padding: 10,
+   // backgroundColor: '#0000000',
+  // marginTop: 10,
+    padding: 1,
     alignItems: 'center',
   },
   formTouchText: {
@@ -151,6 +189,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'steelblue',
   },
+
+  container: {
+    flex: 1,
+    flexDirection: "column"
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  },fixToText: {
+  //  textAlign: 'center',
+  flexDirection: 'column',
+  justifyContent: 'space-evenly',
+}
+  ,
+  text: {
+    color: "black",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    backgroundColor: "#000000a0"
+  }
 });
 
 export default SignIn;
