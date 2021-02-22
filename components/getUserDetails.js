@@ -2,6 +2,7 @@ import * as React from 'react';
 //import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View, TextInput,RefreshControl, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Rating, AirbnbRating } from 'react-native-ratings';
 class getUser extends React.Component {
    
   constructor(props) {
@@ -107,6 +108,10 @@ class getUser extends React.Component {
                onPress={() => navigator.navigate('ViewReviews')  }>
                <Text >View my Reviews</Text>
                </TouchableOpacity>
+               <TouchableOpacity style ={styles.buttonStyle}
+               onPress={() => navigator.navigate('ViewLikedReviews')  }>
+               <Text >View Liked Reviews</Text>
+               </TouchableOpacity>
 
                <Text style= {styles.headLine}>My favourite locations</Text>
 
@@ -126,11 +131,21 @@ class getUser extends React.Component {
                     <Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>{item.location_name 
                     }</Text>
                     </View>
-                    <Text >{"Town: " + item.location_town}</Text>
+                    <Text>Location: {item.location_town}</Text>
                     
 
-                    <Text>{"Rating " + item.avg_overall_rating }</Text>    
-                    <Text>{}</Text>        
+                    
+                    <View style= {styles.RatingStyle}>
+                    <Text>Overall Rating: </Text>  
+                    <AirbnbRating
+                    size ={10}
+                    
+                    defaultRating = {item.quality_rating}
+                    isDisabled
+                    
+                    />
+                    </View>  
+                           
                     </View>
 
                 )}
@@ -156,6 +171,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
 
   },
+  RatingStyle:{
+    alignSelf: 'flex-start',
+    marginTop: 10,
+    marginBottom:5,
+    
+  
+  }
+    ,
   textStyle: {
     fontSize: 22,
     alignSelf: 'center',
