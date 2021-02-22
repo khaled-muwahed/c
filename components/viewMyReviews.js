@@ -195,7 +195,7 @@ class ViewReviews extends React.Component {
                         onPress={() => this.deleteReview(item.location.location_id , item.review.review_id) + this.onRefresh()}
                         />
                         </View>
-                        <Text>{}</Text>
+                        
                             
                     </View>
                     )}
