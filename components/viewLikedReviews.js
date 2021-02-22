@@ -53,37 +53,7 @@ class ViewLikedReviews extends React.Component {
       })
     }
 
-       deleteReview = async (loc_id,rev_id) => {
-        let token = await  AsyncStorage.getItem('@session_token');
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ loc_id +"/review/"+rev_id, {
-       
-        method: 'delete',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-authorization' : token
-        },
-      })
-      .then((response) => {
-        if(response.status === 200) {
-            console.log('deleted')
-          //return response.json()
-        }else if(response.status === 400) {
-          throw 'Bad req';
-        }
-          else if(response.status === 401) {
-          throw 'unautorised';
-        }
-        else{
-          throw 'Somthing went wrong';
-        }
-      })
-     
-      .catch((error) => {
-        console.log(error);
-        ToastAndroid.show(error, ToastAndroid.SHORT);
-      })
-      
-    }
+  
 
       
   componentDidMount() {
@@ -92,19 +62,58 @@ class ViewLikedReviews extends React.Component {
     //this.onRefresh();
     }
 
-    updateReview = () => {
-    this.props.navigation.navigate('update_review',{location_id: item.location_id,review_id: item.review_id});
-    }
+  
 
     onRefresh = () => {
         this.getData();
         console.log("deleting refreshing")
       }
 
+      unLikeReview = async (loc_id,rev_id) => {
+        let token = await  AsyncStorage.getItem('@session_token');
+      return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ loc_id +"/review/"+rev_id +"/like", {
+      
+        method: 'delete',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-authorization' : token
+        },
+      })
+      .then((response) => {
+        if(response.status === 200) {
+            console.log('unliked')
+            this.setState ({isLikedReview: false});
+          //return response.json()
+        }else if(response.status === 404) {
+          throw 'not found';
+        }
+          else if(response.status === 401) {
+          throw 'unautorised';
+        }
+        else if(response.status === 403) {
+          throw 'unautorised';
+        }
+        else if(response.status === 500) {
+          throw 'server error';
+        }
+        else{
+          throw 'Somthing went wrong';
+        }
+      })
+    
+      .catch((error) => {
+        console.log(error);
+        ToastAndroid.show(error, ToastAndroid.SHORT);
+      })
+      
+    }
+  
+
 
     logDataTesting = (x,y) => {
        // console.log()
     }
+    
 
 
 
@@ -189,17 +198,13 @@ class ViewLikedReviews extends React.Component {
                        
                         
                         
-                        <View style={styles.fixToText}>
-                        <Button
-                        title="Update"
-                        onPress={() => navigator.navigate('update_review',{review_id: item.review.review_id, location_id: item.location.location_id})
-                           }
-                        />
-                        <Button
-                        title="Delete"
-                        onPress={() => this.deleteReview(item.location.location_id , item.review.review_id) + this.onRefresh()}
-                        />
-                        </View>
+                        <TouchableOpacity
+
+                        style={styles.buttonStyle}
+                        onPress={() => this.unLikeReview(item.location.location_id , item.review.review_id) + this.onRefresh()}>
+                            
+                        <Text >Unlike ♥ </Text>
+                        </TouchableOpacity>
                         <Text>{}</Text>
                             
                     </View>
@@ -277,6 +282,16 @@ const styles = StyleSheet.create({
         fontSize: 18,
         paddingBottom: 20
     } ,
+    buttonStyle: {
+        alignSelf: 'center',
+        borderRadius: 25,
+        borderWidth: 2,
+        borderColor: '#007aff',
+        marginLeft: 20,
+        marginRight: 20,
+        padding: 9,
+        marginBottom: 15,
+      },
       separator: {
         marginVertical: 8,
         borderBottomColor: '#737373',
