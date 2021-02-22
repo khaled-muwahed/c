@@ -45,12 +45,14 @@ class LocatinInfo extends React.Component {
       })
       .then((response) => {
         if(response.status === 200) {
+          this.checkFav();
           return response.json()
         }else{
           throw 'Somthing went wrong';
         }
       })
       .then(async (responseJson) => {
+        
        // console.log(responseJson);
        this.setState ({
         isLoading: false,
@@ -60,23 +62,6 @@ class LocatinInfo extends React.Component {
 
       });
         
-      /*  this.setState({'location_id': responseJson.location_id});
-        this.setState({'location_name': responseJson.location_name});
-        this.setState({'location_town': responseJson.location_town});
-        this.setState({'latitude' : responseJson.latitude});
-        this.setState({'longitude' : responseJson.longitude});
-        this.setState({'photo_path' : responseJson.photo_path});
-        this.setState({'avg_overall_rating' : responseJson.avg_overall_rating});
-        this.setState({'avg_clenliness_rating' : responseJson.avg_clenliness_rating});
-        this.setState({'avg_quality_rating' : responseJson.avg_quality_rating});
-        this.setState({'location_reviews' : responseJson.location_reviews});*/
-
-       // console.log(this.state);
-
-
-        
-        
-
       })
       .catch((error) => {
         console.log(error);
@@ -147,25 +132,38 @@ class LocatinInfo extends React.Component {
         })
         .then((response) => {
           if(response.status === 200) {
+            
             console.log("checking the list for fav ")
             return response.json();
-          }else{
+          }
+          else if(response.status === 401) {
+            throw 'Unauthorised';
+          }
+          else if(response.status === 400) {
+            throw 'bad request';
+          }
+           else if(response.status === 500) {
+              throw 'sevrer error';
+           }
+
+          
+          else{
             throw 'Somthing went wrong';
           }
         })  
   
         .then(async (responseJson) => {
-          let status = false;
+            let status = false;
           for(let i = 0; i<responseJson.length;i++)
           {
             if(responseJson[i].location_id === this.state.userData.location_id)
             {
-              console.log("found in fav");
+            
               status = true;
             }
           }
           this.setState({isLiked: status});
-          console.log(this.state.isLiked);
+         
         })
         
         .catch((error) => {
@@ -175,8 +173,9 @@ class LocatinInfo extends React.Component {
       }
 
       
-    handleMyFav = ()=>{
-      if(this.state.isLiked){
+    handleMyFav = async ()=>{
+      
+       if(this.state.isLiked){
         this.RmvfromFav();
         this.setState({"isLiked": false});
       }
@@ -192,10 +191,12 @@ class LocatinInfo extends React.Component {
     }
    
       
-  componentDidMount() {
+   componentDidMount() {
     //this.logData();
-   this.getData();
-   this.checkFav();
+    this.getData();
+    
+ 
+   
    console.log(this.state.isLiked);
   }
 
