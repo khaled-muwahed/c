@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationContainer } from '@react-navigation/native';
+//import SearchUser from './components/search';
+//import SearchUser from './search';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -11,7 +16,14 @@ import {
 
   View,
   Button,
+
 } from 'react-native'
+
+import SearchUser from './search';
+import getUser from './getUserDetails';
+import Update from './updateUser';
+import { color } from 'react-native-reanimated';
+
 
 class Home extends Component {
   constructor(props) {
@@ -95,13 +107,7 @@ class Home extends Component {
     this.props.navigation.navigate('getUser');
   }
 
-  updateUser = () => {
-      this.props.navigation.navigate('Update');
-  }
 
-  SearchUserPge = () => {
-    this.props.navigation.navigate('SearchUser');
-}
 
 
 
@@ -120,11 +126,14 @@ class Home extends Component {
       console.log("redsfsfres")
     }
 
+    
+
 
   
 
  render() {
     const navigator = this.props.navigation;
+   
     if (this.state.isLoading) {
       return (
         <View>
@@ -136,26 +145,19 @@ class Home extends Component {
     else {
         
     return (
+    
+      
 
       
     <View> 
+     
+      
       <View style={styles.fixToText}>
         <Button
         title="logout"
         onPress={() => this.signOut()}
         />
-        <Button
-        title="update account"
-        onPress={() =>this.updateUser()}
-        />
-        <Button
-        title="show my details"
-        onPress={() =>this.getUserDetails()}
-        />
-        <Button
-        title="search"
-        onPress={() =>this.SearchUserPge()}
-        />
+      
       </View>
       
       <FlatList  
@@ -193,6 +195,10 @@ class Home extends Component {
 
 }
 }
+
+
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -230,6 +236,25 @@ const styles = StyleSheet.create({
 
 })
 ;
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+  return (
+    
+      <Tab.Navigator
+     
+      >
+        
+        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="SearchUser" component={SearchUser} />
+        <Tab.Screen name="getUser" component={getUser} />
+        <Tab.Screen name="Update" component={Update} />
+      </Tab.Navigator>
+  
+  );
+}
 
 
-export default Home;
+
+
+//export default createBottomTabNavigator;
