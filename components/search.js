@@ -3,7 +3,7 @@ import { Rating, AirbnbRating } from 'react-native-ratings';
 import {
   ScrollView,
   Button, FlatList
-  ,RefreshControl
+  ,RefreshControl,ActivityIndicator
   ,
   ToastAndroid,
   StyleSheet, Text,
@@ -109,87 +109,89 @@ class SearchUser extends Component {
 
 
 
-  render() {
-    const navigator = this.props.navigation;
-    return (
-      <View>
+    render() {
+        const navigator = this.props.navigation;
+       
+        
+        return (
+        <View>
 
-            
-            <TextInput
-              placeholder="Enter an a word to search for..."
-              style={styles.formInput}
-              onChangeText={(q) => this.setState({q: q}) + this.onRefresh()}
-              value={this.state.q}
-            />
-            <View style={styles.fixToText}>
-            <Text>overall rating</Text>
-            <AirbnbRating
-            size ={15}
-            defaultRating = {0}
-            onFinishRating = {(rating) => this.ratingDone(rating , "overall_rating") + this.onRefresh()}
-            />
-            <Text>price rating</Text>
-            <AirbnbRating
-            size ={15}
-            defaultRating = {0}
-            onFinishRating = {(rating) => this.ratingDone(rating , "price_rating") + this.onRefresh()}
-            />
-            </View>
-            <View style={styles.fixToText}> 
-            <Text>cleanliness rating</Text>
-            <AirbnbRating
-            size ={15}
-            defaultRating = {0}
-            onFinishRating = {(rating) => this.ratingDone(rating , "clenliness_rating") + this.onRefresh()}
-            />
-            <Text>quality rating</Text>
-            <AirbnbRating
-            size ={15}
-            defaultRating = {0}
-            onFinishRating = {(rating) => this.ratingDone(rating , "quality_rating") + this.onRefresh()}
-            />
-            </View>
-            <Button
-            title = "Search"
-            onPress = {() => this.searchUrl()}
-            />
-
-            <FlatList  
-                refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.onRefresh}
-                  />
-                }
                 
-                data={this.state.locations}
-                renderItem={({item})=>(
-
-                    
-                    <View style = {styles.fields}>
-                      
-                      < Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>
-                          {"Name: " + item.location_name}</Text>
-                        <Text >overall_rating: {item.avg_overall_rating
-                        }</Text>
-                        <Text >Price Rating: { item.avg_overall_rating
-                        }</Text>
-                        
-                        <Text>{}</Text>        
-                    </View>
-                    )}
-                    keyExtractor= {(item)=> item.location_id.toString()}
+                <TextInput
+                placeholder="Enter an a word to search for..."
+                style={styles.formInput}
+                onChangeText={(q) => this.setState({q: q}) + this.onRefresh()}
+                value={this.state.q}
                 />
+                <View style={styles.fixToText}>
+                <Text>overall rating</Text>
+                <AirbnbRating
+                size ={15}
+                defaultRating = {0}
+                onFinishRating = {(rating) => this.ratingDone(rating , "overall_rating") + this.onRefresh()}
+                />
+                <Text>price rating</Text>
+                <AirbnbRating
+                size ={15}
+                defaultRating = {0}
+                onFinishRating = {(rating) => this.ratingDone(rating , "price_rating") + this.onRefresh()}
+                />
+                </View>
+                <View style={styles.fixToText}> 
+                <Text>cleanliness rating</Text>
+                <AirbnbRating
+                size ={15}
+                defaultRating = {0}
+                onFinishRating = {(rating) => this.ratingDone(rating , "clenliness_rating") + this.onRefresh()}
+                />
+                <Text>quality rating</Text>
+                <AirbnbRating
+                size ={15}
+                defaultRating = {0}
+                onFinishRating = {(rating) => this.ratingDone(rating , "quality_rating") + this.onRefresh()}
+                />
+                </View>
+                <Button
+                title = "Search"
+                onPress = {() => this.searchUrl()}
+                />
+
+                <FlatList  
+                    refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh}
+                    />
+                    }
+                    
+                    data={this.state.locations}
+                    renderItem={({item})=>(
+
+                        
+                        <View style = {styles.fields}>
+                        
+                        < Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>
+                            {"Name: " + item.location_name}</Text>
+                            <Text >overall_rating: {item.avg_overall_rating
+                            }</Text>
+                            <Text >Price Rating: { item.avg_overall_rating
+                            }</Text>
+                            
+                            <Text>{}</Text>        
+                        </View>
+                        )}
+                        keyExtractor= {(item)=> item.location_id.toString()}
+                    />
+                    
                 
             
-        
-        
+            
 
-          
-        
-      </View>
-    );
-  }
+            
+            
+        </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
