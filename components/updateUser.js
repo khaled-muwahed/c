@@ -2,6 +2,7 @@ import * as React from 'react';
 //import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View, TextInput, Alert, ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../Styling/stylingSheet';
 class Update extends React.Component {
    
   constructor(props) {
@@ -142,19 +143,27 @@ class Update extends React.Component {
         <TextInput style={styles.fields} placeholder="Last Name" onChangeText={this.handleLastName} value={this.state.last_name} />
         <TextInput style={styles.fields} placeholder="Email" onChangeText={this.handleEmail} value={this.state.email} />
         <TextInput style={styles.fields} placeholder="Password" onChangeText={this.handlePass} value={this.state.UserInfo.password} secureTextEntry />
+        
+        <View style = {styles.fixToText}>
+        <View style={styles.formItem}>
         <TouchableOpacity style={styles.buttonStyle}
           onPress={() => this.updateUser()}>
-          <Text style={styles.textStyle}>
+          <Text style={styles.formTouchText}>
             Update
-      </Text>
+         </Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.cancelStyle}
+        </View>
+        
+           
+          <View style={styles.formItem}>
+        <TouchableOpacity style={styles.buttonStyle}
           onPress={() => this.Cancel()}>
-          <Text style={styles.cancelText}>
+          <Text style={styles.formTouchText}>
             Cancel
           </Text>
         </TouchableOpacity>
+        </View>
+        </View>
         
 
 
@@ -164,54 +173,6 @@ class Update extends React.Component {
 }
 }
 
-const styles = StyleSheet.create({
-
-  fields: {
-    margin: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-    marginVertical: 15,
-    fontSize: 20,
-
-  },
-  textStyle: {
-    fontSize: 22,
-    alignSelf: 'center',
-    color: '#007aff',
-    fontWeight: '600',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-
-  cancelText: {
-    fontSize: 22,
-    alignSelf: 'center',
-    color: 'red',
-    fontWeight: '600',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-
-  buttonStyle: {
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: '#007aff',
-    marginLeft: 20,
-    marginRight: 20,
-    padding: 9,
-    marginBottom: 15,
-  },
-  cancelStyle: {
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: 'red',
-    marginLeft: 20,
-    marginRight: 20,
-    padding: 9,
-    marginBottom: 15,
-  },
-
-})
 
 
 export default Update;

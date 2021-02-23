@@ -1,10 +1,12 @@
+import 'react-native-gesture-handler';
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 //import SearchUser from './components/search';
 //import SearchUser from './search';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+//import Ionicons from 'react-native-vector-icons/Ionicons';
+import styles from '../Styling/stylingSheet'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -13,6 +15,7 @@ import {
   RefreshControl,
   FlatList
   ,
+  Image, 
 
   View,
   Button,
@@ -111,15 +114,16 @@ class Home extends Component {
 
 
 
-  componentDidMount() {
-    this.displayCoffeeShops();
-    
-    //this.getData();
-    }
-    /*ComponentWillMount(){
-      BackHandler.addEventListener('hardwareBackPress', function() {return true}) 
 
-    } */
+  
+  componentDidMount(){
+    this.unsubscribe = this.props.navigation.addListener('focus', ()=>{
+      this.displayCoffeeShops();
+    });
+  }
+  componentWillUnmount(){
+    this.unsubscribe();
+  }
 
     onRefresh = () => {
       this.displayCoffeeShops();
@@ -149,16 +153,23 @@ class Home extends Component {
       
 
       
-    <View> 
+    <View style={{flex:1 }}> 
+
+          
      
       
-      <View style={styles.fixToText}>
-        <Button
-        title="logout"
-        onPress={() => this.signOut()}
-        />
+     
+        <View style={styles.fixToText}> 
+
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => this.signOut()}
+               >
+                <Text style={styles.formTouchText}>logout</Text>
+              </TouchableOpacity>
+              </View>
       
-      </View>
+     
       
       <FlatList  
                 refreshControl={
@@ -176,8 +187,13 @@ class Home extends Component {
                       
                       < Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>
                           {item.location_name}</Text>
+                          
                           <Text>Location: {item.location_town}</Text>
                         <Text >overall_rating: { item.avg_overall_rating }</Text>
+                        <Image
+                         style={styles.imageStyle}
+              
+                         source={item.photo_path ? {uri: item.photo_path } : null + Date.now()}  />
                         
                         <Text>{}</Text>        
                     </View>
@@ -199,43 +215,7 @@ class Home extends Component {
 
 
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        marginHorizontal: 16,
-      },
-      title: {
-        textAlign: 'center',
-        marginVertical: 8,
-      },
-      fixToText: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-      },
-      separator: {
-        marginVertical: 8,
-        borderBottomColor: '#737373',
-        borderBottomWidth: StyleSheet.hairlineWidth,
-      },
-      clickable: {
-        fontWeight: "bold",
-        fontSize: 25,
-        textDecorationLine : "underline"
-    
-      }
-      ,
-      fields: {
-        margin: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: 'gray',
-        marginVertical: 15,
-        fontSize: 20,
-    
-      },
 
-})
-;
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -246,9 +226,9 @@ export default function App() {
       >
         
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="SearchUser" component={SearchUser} />
-        <Tab.Screen name="getUser" component={getUser} />
-        <Tab.Screen name="Update" component={Update} />
+        <Tab.Screen name="Search" component={SearchUser} />
+        <Tab.Screen name="Show my details" component={getUser} />
+        <Tab.Screen name="Update Account" component={Update} />
       </Tab.Navigator>
   
   );

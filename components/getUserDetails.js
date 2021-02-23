@@ -3,6 +3,7 @@ import * as React from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View, TextInput,RefreshControl, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import styles from '../Styling/stylingSheet';
 class getUser extends React.Component {
    
   constructor(props) {
@@ -103,7 +104,7 @@ class getUser extends React.Component {
               </View>
 
              
-                  
+              <View style={styles.fixToText}>
               <TouchableOpacity style ={styles.buttonStyle}
                onPress={() => navigator.navigate('ViewReviews')  }>
                <Text >View my Reviews</Text>
@@ -112,6 +113,7 @@ class getUser extends React.Component {
                onPress={() => navigator.navigate('ViewLikedReviews')  }>
                <Text >View Liked Reviews</Text>
                </TouchableOpacity>
+               </View>
 
                <Text style= {styles.headLine}>My favourite locations</Text>
 
@@ -161,98 +163,7 @@ class getUser extends React.Component {
 }
 }
 
-const styles = StyleSheet.create({
 
-  fields: {
-    margin: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-    marginVertical: 15,
-    fontSize: 20,
-
-  },
-  RatingStyle:{
-    alignSelf: 'flex-start',
-    marginTop: 10,
-    marginBottom:5,
-    
-  
-  }
-    ,
-  textStyle: {
-    fontSize: 22,
-    alignSelf: 'center',
-    color: '#007aff',
-    fontWeight: '600',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  clickable: {
-    fontWeight: "bold",
-    fontSize: 25,
-    textDecorationLine : "underline"
-
-  }
-  ,
-  headLine:{
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#000000',
-    fontSize: 18,
-    paddingBottom: 20
-  } ,
-  txtInitials:{
-    
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: '#0B92F2',
-    fontSize: 15  
-  } , 
-  fixToText: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  cancelText: {
-    fontSize: 22,
-    alignSelf: 'center',
-    color: 'red',
-    fontWeight: '600',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-
-  buttonStyle: {
-    alignSelf: 'center',
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: '#007aff',
-    marginLeft: 20,
-    marginRight: 20,
-    padding: 10,
-    marginTop:10,
-    marginBottom: 15,
-  },
-  cancelStyle: {
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: 'red',
-    marginLeft: 20,
-    marginRight: 20,
-    padding: 9,
-    marginBottom: 15,
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center"
-  },
-  horizontal: {
-
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10
-  }
-
-})
 
 
 export default getUser;

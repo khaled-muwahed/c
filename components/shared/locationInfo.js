@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import styles from '../../Styling/stylingSheet';
 
 //import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View,Image,Use,RefreshControl, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView } from 'react-native';
@@ -20,6 +21,7 @@ class LocatinInfo extends React.Component {
           isLikedLocation: false,
 
           isLikedReview: [],
+          reviews: [],
 
           likes: 0, 
           
@@ -38,7 +40,7 @@ class LocatinInfo extends React.Component {
   }
 
   getData =  async () => {
-      console.log('we are in coffee details');
+     // console.log('we are in coffee details');
     //let id = await  AsyncStorage.getItem('@user_id');
     let token = await  AsyncStorage.getItem('@session_token');
     return fetch('http://10.0.2.2:3333/api/1.0.0/location/'+this.state.clicked_location_id, {
@@ -63,18 +65,16 @@ class LocatinInfo extends React.Component {
        this.setState ({
         isLoading: false,
         userData : responseJson
-        
-
-
       });
      /* this.setState({'likes': responseJson.location_reviews.likes});
       console.log(this.state.likes , "Likes number");*/
-        
       })
       .catch((error) => {
         console.log(error);
       })
     }
+
+    
 
     addToFavouriate =  async () => {
    // let id = await  AsyncStorage.getItem('@user_id');
@@ -112,6 +112,7 @@ class LocatinInfo extends React.Component {
          .then((response) => {
            if(response.status === 200) {
              console.log('DELETED');
+             
              ToastAndroid.show("deleted", ToastAndroid.show);
            }else{
              throw 'Somthing went wrong';
@@ -124,7 +125,7 @@ class LocatinInfo extends React.Component {
    
        addReview = () => {
         this.props.navigation.navigate('Update');
-    }
+        }
 
       likeReview = async (loc_id,rev_id) => {
         let token = await  AsyncStorage.getItem('@session_token');
@@ -139,6 +140,7 @@ class LocatinInfo extends React.Component {
       .then((response) => {
         if(response.status === 200) {
          // this.setState ({isLikedReview: true});
+         this.getData();
             console.log('liked')
           //return response.json()
         }else if(response.status === 400) {
@@ -173,6 +175,7 @@ class LocatinInfo extends React.Component {
     })
     .then((response) => {
       if(response.status === 200) {
+        this.getData();
           console.log('unliked')
          // this.setState ({isLikedReview: false});
         //return response.json()
@@ -200,22 +203,16 @@ class LocatinInfo extends React.Component {
     
   }
 
-
-
-    
     checkFav = async ()=>{
       let token = await AsyncStorage.getItem('@session_token');
         return fetch('http://10.0.2.2:3333/api/1.0.0/find?search_in=favourite', {
           method: 'get',
           headers: {
-            
             'x-authorization' : token
           }
         })
         .then((response) => {
           if(response.status === 200) {
-            
-            console.log("checking the list for fav ")
             return response.json();
           }
           else if(response.status === 401) {
@@ -240,12 +237,10 @@ class LocatinInfo extends React.Component {
           {
             if(responseJson[i].location_id === this.state.userData.location_id)
             {
-            
               status = true;
             }
           }
           this.setState({isLikedLocation: status});
-         
         })
         
         .catch((error) => {
@@ -272,27 +267,55 @@ class LocatinInfo extends React.Component {
       
       if(this.checkLikedReview(rev)){
        this.unLikeReview(loc , rev);
-      
-      // this.setState({"isLikedReview": false});
-       
      }
      else{
        this.likeReview(loc , rev);
-       
-      // this.setState({"isLikedLocation": true});
      }
      this.fetchLikedReview();
+  
    }
 
+/*
+   getReviews =  async () => {
+    console.log('we are in coffee details');
+  //let id = await  AsyncStorage.getItem('@user_id');
+  let token = await  AsyncStorage.getItem('@session_token');
+  return fetch('http://10.0.2.2:3333/api/1.0.0/location/'+this.state.clicked_location_id, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-authorization' : token
+      }
+    })
+    .then((response) => {
+      if(response.status === 200) {
+        this.checkFav();
+        return response.json()
+      }else{
+        throw 'Somthing went wrong';
+      }
+    })
+    .then(async (responseJson) => {
+      
+     // console.log(responseJson);
+     this.setState ({
+        
+      reviews : responseJson.location_reviews
+    });
+    this.setState({'likes': responseJson.location_reviews.likes});
+    console.log(this.state.reviews , "Log Rev");
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+*/
  
-    logData= () => {
-        console.log(this.state.userData.location_reviews.overall_rating);
-    }
 
 
 
     fetchLikedReview =  async () => {
-      console.log('we are in user details');
+     // console.log('we are in user details');
     let id = await  AsyncStorage.getItem('@user_id');
     let token = await  AsyncStorage.getItem('@session_token');
     return fetch('http://10.0.2.2:3333/api/1.0.0/user/'+id, {
@@ -300,7 +323,6 @@ class LocatinInfo extends React.Component {
         headers: {
           'Content-Type': 'application/json',
           'x-authorization' : token
-  
         }
       })
       .then((response) => {
@@ -312,12 +334,9 @@ class LocatinInfo extends React.Component {
       })
       .then(async (responseJson) => {
         this.setState ({
-          
+          isLoading: false,          
           isLikedReview : responseJson.liked_reviews
         });
-
-
-        
 
       })
       .catch((error) => {
@@ -341,8 +360,11 @@ class LocatinInfo extends React.Component {
       
    componentDidMount() {
     //this.logData();
-    this.getData();
     this.fetchLikedReview();
+    this.getData();
+
+   // this.getReviews();
+  
     
  
    
@@ -375,7 +397,7 @@ class LocatinInfo extends React.Component {
 
                 style={styles.buttonStyle}
                 onPress={() => this.handleMyFav()}>
-                <Text >{this.state.isLikedLocation === true? "♥" : "♡"}</Text>
+                <Text >{this.state.isLikedLocation === true? "UnFavourite ♥" : "Favourite ♡"}</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity
@@ -393,6 +415,10 @@ class LocatinInfo extends React.Component {
                   <Text>{this.state.userData.location_town} </Text><Text>Average Rating: { this.state.userData.avg_overall_rating }</Text> 
               </View>
             </View> 
+            <Image
+                         style={styles.imageStretch}
+              
+                         source={this.state.userData.photo_path ? {uri: this.state.userData.photo_path } : null }  />
 
         
 
@@ -440,15 +466,19 @@ class LocatinInfo extends React.Component {
                   />
                </View> 
                      <Text style={styles.centeredTxt} >{ item.review_body}</Text>
-                     <Text style={styles.centeredTxt} >{ item.likes}</Text>
+                     
+                     
+                     <View style={styles.fixTogether}>
+                     <Text style={styles.centeredTxt} ></Text>
                      <TouchableOpacity
                 
 
                       style={styles.buttonStyle}
                       onPress={() => this.handleLikedReviews(this.state.userData.location_id ,item.review_id) }>
                         
-                      <Text > {this.checkLikedReview(item.review_id) === true? "♥" : "♡" } </Text>
+                      <Text > {this.checkLikedReview(item.review_id) === true? "♥" : "♡" } { item.likes} </Text>
                       </TouchableOpacity>
+                      </View>
                     </View>
                     )}
                     keyExtractor= {(item)=> item.review_id.toString()}
@@ -460,89 +490,12 @@ class LocatinInfo extends React.Component {
   }
 }
 }
-
+/*
 const styles = StyleSheet.create({
 
-  fields: {
-    margin: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-    marginVertical: 15,
-    fontSize: 20,
-    
+  
 
-  }
-  ,
-      fixToText: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-      },
-  textStyle: {
-    fontSize: 20,
-    alignSelf: 'center',
-    color: '#BA4A00',
-    fontWeight: '600',
-    paddingTop: 6,
-    paddingBottom: 6
-  },
-  textHeader: {
-    fontSize: 15,
-    alignSelf: 'center',
-    justifyContent: 'space-evenly',
-    color: '#171919',
-    fontWeight: '600',
-
-    paddingBottom: 6
-  },
-
-  cancelText: {
-    fontSize: 22,
-    alignSelf: 'center',
-    color: 'red',
-    fontWeight: '600',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  centeredTxt:{
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontFamily: 'monospace',
-    fontSize: 18
-  } ,
-
-  buttonStyle: {
-    alignSelf: 'center',
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: '#007aff',
-    marginLeft: 20,
-    marginRight: 20,
-    padding: 9,
-    marginBottom: 15,
-  },
-  cancelStyle: {
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: 'red',
-    marginLeft: 20,
-    marginRight: 20,
-    padding: 9,
-    marginBottom: 15,
-  },
-  imageStyle: {
-    
-    alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-   // alignItems: 'stretch',
-    height: 160,
-    width: 180,
-    borderRadius: 300/15,
-    
-   
-  },
-
-})
+})*/
 
 
 export default LocatinInfo;

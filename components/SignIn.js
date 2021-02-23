@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../Styling/stylingSheet';
 
 
 import React, { Component } from 'react';
@@ -131,89 +132,5 @@ class SignIn extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  title: {
-    color: '#CCBB17',
-   // backgroundColor: 'lightblue',
-    padding: 10,
-    fontSize: 25,
-  },
-  
-  buttonStyle: {
-    alignSelf: 'flex-start',
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: '#CC8D17',
-   // marginLeft: 20,
-   // marginRight: 20,
-    padding: 10,
-    marginBottom: 12,
-    
-    marginTop: 5,
-  },
-  titleStyle:{
-    marginTop : 50,
-    color: '#CC8D17',
-   // backgroundColor: 'lightblue',
-    padding: 10,
-    fontSize: 25,
-
-  },
-
-
-
-  formItem: {
-    
-    padding: 10,
-    marginTop: 5,
-//marginBottom: 0
-  },
-  
-  formLabel: {
-    fontSize: 15,
-    color: '#CC8D17',
-    marginTop: -20,
-   // marginBottom: 10
-  
-  },
-  formInput: {
-    borderWidth: 1,
-    borderColor: '#CC8D17',
-    borderRadius: 20,
-  },
-  formTouch: {
-   // backgroundColor: '#0000000',
-  // marginTop: 10,
-    padding: 1,
-    alignItems: 'center',
-  },
-  formTouchText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#CC8D17',
-  },
-
-  container: {
-    flex: 1,
-    flexDirection: "column"
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center"
-  },fixToText: {
-  //  textAlign: 'center',
-  flexDirection: 'column',
-  justifyContent: 'space-evenly',
-}
-  ,
-  text: {
-    color: "black",
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    backgroundColor: "#000000a0"
-  }
-});
 
 export default SignIn;

@@ -6,6 +6,7 @@ import { TouchableOpacity, StyleSheet, ActivityIndicator
       FlatList , SafeAreaView, Button, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import styles from '../../Styling/stylingSheet';
 
 class ViewLikedReviews extends React.Component {
    
@@ -197,7 +198,7 @@ class ViewLikedReviews extends React.Component {
                    
                        
                         
-                        
+                        <View style = {styles.fixToText}>
                         <TouchableOpacity
 
                         style={styles.buttonStyle}
@@ -205,7 +206,8 @@ class ViewLikedReviews extends React.Component {
                             
                         <Text >Unlike ♥ </Text>
                         </TouchableOpacity>
-                        <Text>{}</Text>
+                        </View>
+                        
                             
                     </View>
                     )}
@@ -228,78 +230,6 @@ class ViewLikedReviews extends React.Component {
   
 }
 }
-
-const styles = StyleSheet.create({
-    fields: {
-        margin: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: 'gray',
-        marginVertical: 15,
-        fontSize: 20,
-        
-    
-      },
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        marginHorizontal: 16,
-      },
-      textAdjust:{
-        marginBottom: 20,
-        
-        
-        //marginTop: 10
-      },
-      title: {
-        textAlign: 'center',
-        marginVertical: 8,
-      },
-      centeredTxt:{
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontFamily: 'sans-serif',
-        fontSize: 16,
-        marginBottom: 20,
-        marginTop: 10
-      } ,
-      fixToText: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        
-        
-      },
-    
-      txtInitials:{
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#0B92F2',
-        fontSize: 20
-    } ,
-    headLine:{
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#000000',
-        fontSize: 18,
-        paddingBottom: 20
-    } ,
-    buttonStyle: {
-        alignSelf: 'center',
-        borderRadius: 25,
-        borderWidth: 2,
-        borderColor: '#007aff',
-        marginLeft: 20,
-        marginRight: 20,
-        padding: 9,
-        marginBottom: 15,
-      },
-      separator: {
-        marginVertical: 8,
-        borderBottomColor: '#737373',
-        borderBottomWidth: StyleSheet.hairlineWidth,
-      },
-      
-
-})
 
 
 export default  ViewLikedReviews ;

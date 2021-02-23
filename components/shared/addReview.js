@@ -10,6 +10,7 @@ import {
   TouchableOpacity, View
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../../Styling/stylingSheet';
 
 class add_review extends Component {
   constructor(props) {
@@ -151,9 +152,9 @@ class add_review extends Component {
             />
           </View>
 
-          <View style={styles.formItem}>
+          <View style={styles.fixToText}>
             <TouchableOpacity
-              style={styles.formTouch}
+              style={styles.buttonStyle}
               onPress={() => this.submitReview()}>
               <Text style={styles.formTouchText}>Submit</Text>
             </TouchableOpacity>
@@ -164,41 +165,5 @@ class add_review extends Component {
   }
 }
 }
-
-const styles = StyleSheet.create({
-  title: {
-    color: 'steelblue',
-    backgroundColor: 'lightblue',
-    padding: 10,
-    fontSize: 25,
-  },
-  formItem: {
-    padding: 20,
-  },
-  fixToText: {
-    textAlign: 'center',
-  flexDirection: 'row',
-  justifyContent: 'space-evenly',
-},
-  formLabel: {
-    fontSize: 15,
-    color: 'steelblue',
-  },
-  formInput: {
-    borderWidth: 1,
-    borderColor: 'lightblue',
-    borderRadius: 5,
-  },
-  formTouch: {
-    backgroundColor: 'lightblue',
-    padding: 10,
-    alignItems: 'center',
-  },
-  formTouchText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'steelblue',
-  },
-});
 
 export default add_review;

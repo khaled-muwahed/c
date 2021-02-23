@@ -3,6 +3,7 @@ import * as React from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, Text,RefreshControl, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import styles from '../../Styling/stylingSheet'
 
 class ViewReviews extends React.Component {
    
@@ -185,15 +186,19 @@ class ViewReviews extends React.Component {
                         
                         
                         <View style={styles.fixToText}>
-                        <Button
-                        title="Update"
-                        onPress={() => navigator.navigate('update_review',{review_id: item.review.review_id, location_id: item.location.location_id})
-                           }
-                        />
-                        <Button
-                        title="Delete"
-                        onPress={() => this.deleteReview(item.location.location_id , item.review.review_id) + this.onRefresh()}
-                        />
+                        <TouchableOpacity
+                         style={styles.buttonStyle}
+                           onPress={() => navigator.navigate('update_review',{review_id: item.review.review_id, 
+                          location_id: item.location.location_id})}>
+                         <Text style={styles.formTouchText}>Update</Text>
+                         </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.buttonStyle}
+                           onPress={() => this.deleteReview(item.location.location_id , item.review.review_id) + this.onRefresh()}
+                          >
+                          <Text style={styles.formTouchText}>Delete</Text>
+                        </TouchableOpacity>
                         </View>
                         
                             
@@ -219,67 +224,6 @@ class ViewReviews extends React.Component {
 }
 }
 
-const styles = StyleSheet.create({
-    fields: {
-        margin: 20,
-        borderBottomWidth: 1,
-        borderBottomColor: 'gray',
-        marginVertical: 15,
-        fontSize: 20,
-        
-    
-      },
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        marginHorizontal: 16,
-      },
-      textAdjust:{
-        marginBottom: 20,
-        
-        
-        //marginTop: 10
-      },
-      title: {
-        textAlign: 'center',
-        marginVertical: 8,
-      },
-      centeredTxt:{
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontFamily: 'sans-serif',
-        fontSize: 16,
-        marginBottom: 20,
-        marginTop: 10
-      } ,
-      fixToText: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        
-        
-      },
-    
-      txtInitials:{
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#0B92F2',
-        fontSize: 20
-    } ,
-    headLine:{
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#000000',
-        fontSize: 18,
-        paddingBottom: 20
-    } ,
-      separator: {
-        marginVertical: 8,
-        borderBottomColor: '#737373',
-        borderBottomWidth: StyleSheet.hairlineWidth,
-      },
-      
-
-})
 
 
 export default  ViewReviews ;

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../../Styling/stylingSheet';
 
 class update_review extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class update_review extends Component {
     })
     .then((response) => {
       if(response.status === 200) {
-          console.log('Review Updated')
+       //   console.log('Review Updated')
           //ToastAndroid.show("review Updated", ToastAndroid.show);
           this.props.navigation.navigate('ViewReviews');
      
@@ -177,40 +178,5 @@ componentDidMount() {
 
 }
 
-const styles = StyleSheet.create({
-  title: {
-    color: 'steelblue',
-    backgroundColor: 'lightblue',
-    padding: 10,
-    fontSize: 25,
-  },
-  fixToText: {
-    textAlign: 'center',
-  flexDirection: 'row',
-  justifyContent: 'space-evenly',
-},
-  formItem: {
-    padding: 20,
-  },
-  formLabel: {
-    fontSize: 15,
-    color: 'steelblue',
-  },
-  formInput: {
-    borderWidth: 1,
-    borderColor: 'lightblue',
-    borderRadius: 5,
-  },
-  formTouch: {
-    backgroundColor: 'lightblue',
-    padding: 10,
-    alignItems: 'center',
-  },
-  formTouchText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'steelblue',
-  },
-});
 
 export default update_review;
