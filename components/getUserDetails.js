@@ -136,11 +136,11 @@ class getUser extends React.Component {
 
                     
                     <View style= {styles.RatingStyle}>
-                    <Text>Overall Rating: </Text>  
+                    <Text>Overall Rating: {item.avg_price_rating}</Text>  
                     <AirbnbRating
                     size ={10}
                     
-                    defaultRating = {item.quality_rating}
+                    defaultRating = {item.avg_price_rating}
                     isDisabled
                     
                     />
