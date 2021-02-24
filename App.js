@@ -20,6 +20,8 @@ import LocatinInfo from './components/shared/locationInfo';
 import add_review from './components/shared/addReview';
 import ViewReviews from './components/shared/viewMyReviews';
 import update_review from './components/shared/updateReview';
+
+import bottomTabNav from './Navigator/bottomTabNav';
 //import SearchUser from './components/search';
 //<Stack.Screen name= "SearchUser" component = {SearchUser}></Stack.Screen>
 import ViewLikedReviews from './components/shared/viewLikedReviews';
@@ -36,9 +38,8 @@ render()
         <Stack.Navigator>
         <Stack.Screen name= "login" component = {login}></Stack.Screen>
         <Stack.Screen name= "signup" component = {signup}></Stack.Screen>
-        <Stack.Screen name= "home" component = {home} ></Stack.Screen>
-        
-        
+        <Stack.Screen name="home" component={bottomTabNav}  options={{headerLeft: null, title: 'Coffida'}}/>
+       
         <Stack.Screen name= "LocatinInfo" component = {LocatinInfo}></Stack.Screen>
         <Stack.Screen name= "add_review" component = {add_review}></Stack.Screen>
         <Stack.Screen name= "ViewReviews" component = {ViewReviews}></Stack.Screen>
