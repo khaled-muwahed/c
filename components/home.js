@@ -1,34 +1,37 @@
 import 'react-native-gesture-handler';
-import React, { Component } from 'react';
+//import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Rating, AirbnbRating } from 'react-native-ratings';
 import { NavigationContainer } from '@react-navigation/native';
 //import SearchUser from './components/search';
 //import SearchUser from './search';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import Ionicons from 'react-native-vector-icons/Ionicons';
-import styles from '../Styling/stylingSheet'
+import styles from '../Styling/stylingSheet';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   StyleSheet,
   TouchableOpacity,
   Text,
   ActivityIndicator,
   RefreshControl,
-  FlatList
+  FlatList,
+  BackHandler
   ,
   Image, 
 
   View,
   Button,
+  
 
-} from 'react-native'
+} from 'react-native';
 
-import SearchUser from './search';
-import getUser from './getUserDetails';
-import Update from './updateUser';
+
 import { color } from 'react-native-reanimated';
 
 
-class Home extends Component {
+class Home extends PureComponent {
   constructor(props) {
 
     super(props);
@@ -44,10 +47,7 @@ class Home extends Component {
     };
 
   }
-  /*
-  static navigationOptions = {
-    headerLeft: null
-  } */
+
 
 
     displayCoffeeShops = async () => {
@@ -113,9 +113,6 @@ class Home extends Component {
 
 
 
-
-
-  
   componentDidMount(){
     this.unsubscribe = this.props.navigation.addListener('focus', ()=>{
       this.displayCoffeeShops();
@@ -124,6 +121,12 @@ class Home extends Component {
   componentWillUnmount(){
     this.unsubscribe();
   }
+
+
+
+
+
+ 
 
     onRefresh = () => {
       this.displayCoffeeShops();
@@ -155,10 +158,6 @@ class Home extends Component {
       
     <View style={{flex:1 }}> 
 
-          
-     
-      
-     
         <View style={styles.fixToText}> 
 
               <TouchableOpacity
@@ -167,7 +166,7 @@ class Home extends Component {
                >
                 <Text style={styles.formTouchText}>logout</Text>
               </TouchableOpacity>
-              </View>
+        </View>
       
      
       
@@ -185,11 +184,19 @@ class Home extends Component {
                     
                     <View style = {styles.fields}>
                       
-                      < Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>
+                          < Text style = {styles.clickable} onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>
                           {item.location_name}</Text>
                           
                           <Text>Location: {item.location_town}</Text>
-                        <Text >overall_rating: { item.avg_overall_rating }</Text>
+                          <Text >Average overall Rating: </Text>
+                       
+                          <AirbnbRating
+                        
+                          size ={15}
+                            defaultRating = { item.avg_overall_rating }
+                            isDisabled
+                          />
+                          <Text></Text>
                         <Image
                          style={styles.imageStyle}
               
@@ -213,28 +220,6 @@ class Home extends Component {
 }
 
 
+export default Home;
 
 
-
-const Tab = createBottomTabNavigator();
-
-export default function App() {
-  return (
-    
-      <Tab.Navigator
-     
-      >
-        
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Search" component={SearchUser} />
-        <Tab.Screen name="Show my details" component={getUser} />
-        <Tab.Screen name="Update Account" component={Update} />
-      </Tab.Navigator>
-  
-  );
-}
-
-
-
-
-//export default createBottomTabNavigator;
