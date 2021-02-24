@@ -88,7 +88,6 @@ class LocatinInfo extends React.Component {
       })
       .then((response) => {
         if(response.status === 200) {
-          console.log('ADDED');
           ToastAndroid.show("added to favourite", ToastAndroid.show);
         }else{
           throw 'Somthing went wrong';
@@ -100,7 +99,6 @@ class LocatinInfo extends React.Component {
     }
 
     RmvfromFav =  async () => {
-      // let id = await  AsyncStorage.getItem('@user_id');
        let token = await  AsyncStorage.getItem('@session_token');
        return fetch('http://10.0.2.2:3333/api/1.0.0/location/'+this.state.clicked_location_id +'/favourite', {
            method: 'delete',
@@ -110,9 +108,7 @@ class LocatinInfo extends React.Component {
            }
          })
          .then((response) => {
-           if(response.status === 200) {
-             console.log('DELETED');
-             
+           if(response.status === 200) {             
              ToastAndroid.show("deleted", ToastAndroid.show);
            }else{
              throw 'Somthing went wrong';
@@ -129,7 +125,7 @@ class LocatinInfo extends React.Component {
 
       likeReview = async (loc_id,rev_id) => {
         let token = await  AsyncStorage.getItem('@session_token');
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ loc_id +"/review/"+rev_id +"/like", {
+         return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ loc_id +"/review/"+rev_id +"/like", {
       
         method: 'post',
         headers: {
@@ -139,10 +135,7 @@ class LocatinInfo extends React.Component {
       })
       .then((response) => {
         if(response.status === 200) {
-         // this.setState ({isLikedReview: true});
          this.getData();
-            console.log('liked')
-          //return response.json()
         }else if(response.status === 400) {
           throw 'Bad req';
         }
@@ -176,9 +169,7 @@ class LocatinInfo extends React.Component {
     .then((response) => {
       if(response.status === 200) {
         this.getData();
-          console.log('unliked')
-         // this.setState ({isLikedReview: false});
-        //return response.json()
+
       }else if(response.status === 404) {
         throw 'not found';
       }
@@ -275,44 +266,6 @@ class LocatinInfo extends React.Component {
   
    }
 
-/*
-   getReviews =  async () => {
-    console.log('we are in coffee details');
-  //let id = await  AsyncStorage.getItem('@user_id');
-  let token = await  AsyncStorage.getItem('@session_token');
-  return fetch('http://10.0.2.2:3333/api/1.0.0/location/'+this.state.clicked_location_id, {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-authorization' : token
-      }
-    })
-    .then((response) => {
-      if(response.status === 200) {
-        this.checkFav();
-        return response.json()
-      }else{
-        throw 'Somthing went wrong';
-      }
-    })
-    .then(async (responseJson) => {
-      
-     // console.log(responseJson);
-     this.setState ({
-        
-      reviews : responseJson.location_reviews
-    });
-    this.setState({'likes': responseJson.location_reviews.likes});
-    console.log(this.state.reviews , "Log Rev");
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }
-*/
- 
-
-
 
     fetchLikedReview =  async () => {
      // console.log('we are in user details');
@@ -358,30 +311,35 @@ class LocatinInfo extends React.Component {
     }
    
       
-   componentDidMount() {
-    //this.logData();
-    this.fetchLikedReview();
-    this.getData();
-
-   // this.getReviews();
-  
-    
  
-   
-   console.log(this.state.isLikedLocation);
+
+  componentDidMount(){
+    this.unsubscribe = this.props.navigation.addListener('focus', ()=>{
+      this.fetchLikedReview();
+      this.getData();
+     
+    });
   }
+  componentWillUnmount(){
+    this.unsubscribe();
+  }
+
+
+
+
+
+
 
   onRefresh = () => {
     this.getData();
 
-   // console.log("deleting refreshing")
   }
 
  
 
   render() {
     const navigator = this.props.navigation;
-     // console.log('get data rendering');
+
     if (this.state.isLoading) {
       return (
         <View>
@@ -479,6 +437,13 @@ class LocatinInfo extends React.Component {
                       <Text > {this.checkLikedReview(item.review_id) === true? "♥" : "♡" } { item.likes} </Text>
                       </TouchableOpacity>
                       </View>
+
+                      <Image
+                       source={{uri:'http://10.0.2.2:3333/api/1.0.0/location/'+this.state.userData.location_id+'/review/'+item.review_id+'/photo?timestamp' +Date.now()} }
+                
+                      style={styles.imageStyle}
+                     />
+
                     </View>
                     )}
                     keyExtractor= {(item)=> item.review_id.toString()}
@@ -490,12 +455,7 @@ class LocatinInfo extends React.Component {
   }
 }
 }
-/*
-const styles = StyleSheet.create({
 
-  
-
-})*/
 
 
 export default LocatinInfo;
