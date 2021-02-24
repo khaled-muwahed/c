@@ -55,7 +55,6 @@ class Update extends React.Component {
         headers: {
           'Content-Type': 'application/json',
           'x-authorization' : token
-  
         }
       })
       .then((response) => {
@@ -66,7 +65,7 @@ class Update extends React.Component {
         }
       })
       .then(async (responseJson) => {
-        console.log(responseJson);
+  
         
         this.setState({'first_name': responseJson.first_name});
         this.setState({'last_name': responseJson.last_name});
@@ -117,14 +116,22 @@ class Update extends React.Component {
         }
         }
 
-  Cancel = () => {
-    this.props.navigation.navigate('home');
+  
+
+
+  componentDidMount(){
+    this.unsubscribe = this.props.navigation.addListener('focus', ()=>{
+      this.getData(); 
+    });
+  }
+  componentWillUnmount(){
+    this.unsubscribe();
   }
 
-  componentDidMount() {
 
-    this.getData();
-  }
+
+
+
 
   render() {
     if (this.state.isLoading) {
@@ -137,7 +144,7 @@ class Update extends React.Component {
     }
     else {
     return (
-      <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
+      <View style={{ flex: 1}}>
         <Text style={styles.textStyle} >Update user info</Text>
         <TextInput style={styles.fields} placeholder="First name" onChangeText={this.handleFirstName} value={this.state.first_name} />
         <TextInput style={styles.fields} placeholder="Last Name" onChangeText={this.handleLastName} value={this.state.last_name} />
@@ -154,18 +161,8 @@ class Update extends React.Component {
         </TouchableOpacity>
         </View>
         
-           
-          <View style={styles.formItem}>
-        <TouchableOpacity style={styles.buttonStyle}
-          onPress={() => this.Cancel()}>
-          <Text style={styles.formTouchText}>
-            Cancel
-          </Text>
-        </TouchableOpacity>
-        </View>
-        </View>
-        
 
+        </View>
 
       </View>
     );
