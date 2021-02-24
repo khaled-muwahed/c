@@ -60,10 +60,19 @@ class getUser extends React.Component {
 
    
       
-  componentDidMount() {
+  
 
-    this.getData();
-    }
+    
+  componentDidMount(){
+    this.unsubscribe = this.props.navigation.addListener('focus', ()=>{
+      this.getData(); 
+    });
+  }
+  componentWillUnmount(){
+    this.unsubscribe();
+  }
+
+
 
     onRefresh = () => {
       this.getData();
@@ -136,7 +145,7 @@ class getUser extends React.Component {
                     <Text>Location: {item.location_town}</Text>
                     
 
-                    
+              
                     <View style= {styles.RatingStyle}>
                     <Text>Overall Rating: {item.avg_price_rating}</Text>  
                     <AirbnbRating
