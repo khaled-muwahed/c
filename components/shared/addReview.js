@@ -4,7 +4,8 @@ import {
   ScrollView,
   Button,
   ToastAndroid,
-  StyleSheet, Text,
+  StyleSheet,
+  Alert, Text,
   ActivityIndicator,
   TextInput,
   TouchableOpacity, View
@@ -26,10 +27,35 @@ class add_review extends Component {
     }
   }
 
+  isPorfane = async () =>{
+    const badWord = ["pasta","rice","tea","food","cakes","pastries","cake","pastry","icecream","jucie","food" ];
+    let str = this.state.review_body.toLowerCase();
+    var res =  str.split(" ");
+    console.log(res);
+
+    for (let i =0 ; i< res.length;i++){
+      for (let j =0; j <badWord.length; j++){
+      if(res[i] === badWord[j]){
+        console.log("similar words found" , res[i] , badWord[j]);
+      
+        Alert.alert("reviews must be relevant");
+        return true
+      }
+    }
+      
+    }
+    this.submitReview()
+    return false 
+  }
+
+
+
+
   submitReview = async () => {
-    if(this.state.overall_rating === '' || this.state.price_rating === '' || this.state.quality_rating === '' || this.state.clenliness_rating === '' || this.state.review_body === ''){
+    if(this.state.overall_rating === 0 || this.state.price_rating === 0 || this.state.quality_rating === 0 || this.state.clenliness_rating === 0 || this.state.review_body === ''){
         ToastAndroid.show("fields cant be blank", ToastAndroid.show);
     }
+  
     else{
         let token = await  AsyncStorage.getItem('@session_token');
     return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ this.state.clicked_location_id +"/review", {
@@ -155,7 +181,7 @@ class add_review extends Component {
           <View style={styles.fixToText}>
             <TouchableOpacity
               style={styles.buttonStyle}
-              onPress={() => this.submitReview()}>
+              onPress={() => console.log(this.isPorfane())}>
               <Text style={styles.formTouchText}>Submit</Text>
             </TouchableOpacity>
           </View>
