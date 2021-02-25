@@ -20,6 +20,7 @@ import LocatinInfo from './components/shared/locationInfo';
 import add_review from './components/shared/addReview';
 import ViewReviews from './components/shared/viewMyReviews';
 import update_review from './components/shared/updateReview';
+import addReviewPic from './components/shared/addPic';
 
 import bottomTabNav from './Navigator/bottomTabNav';
 //import SearchUser from './components/search';
@@ -42,6 +43,11 @@ render()
        
         <Stack.Screen name= "LocatinInfo" component = {LocatinInfo}></Stack.Screen>
         <Stack.Screen name= "add_review" component = {add_review}></Stack.Screen>
+        <Stack.Screen name= "addReviewPic" component = {addReviewPic}></Stack.Screen>
+
+
+
+
         <Stack.Screen name= "ViewReviews" component = {ViewReviews}></Stack.Screen>
         <Stack.Screen name= "update_review" component = {update_review}></Stack.Screen>
 
