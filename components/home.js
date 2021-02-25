@@ -11,13 +11,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import styles from '../Styling/stylingSheet';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
-  StyleSheet,
+ 
   TouchableOpacity,
   Text,
   ActivityIndicator,
   RefreshControl,
   FlatList,
-  BackHandler
+  Alert
   ,
   Image, 
 
@@ -80,6 +80,24 @@ class Home extends PureComponent {
       })
     
     }
+
+    signOutAlert = () => {
+      Alert.alert(
+        'Signing Out',
+        'Are you sure you want to logout?',
+        [
+          {
+            text: 'Stay logged in',
+            style: 'cancel'
+          },
+          {
+            text: 'Leave',
+            onPress: () => this.signOut(),
+          },
+        ],
+        {cancelable: false},
+      );
+    };
 
 
   signOut = async () => {
@@ -162,7 +180,7 @@ class Home extends PureComponent {
 
               <TouchableOpacity
                 style={styles.buttonStyle}
-                onPress={() => this.signOut()}
+                onPress={() => this.signOutAlert()}
                >
                 <Text style={styles.formTouchText}>logout <Ionicons name= {"log-out-outline"} size = {25}/></Text>
               </TouchableOpacity>
