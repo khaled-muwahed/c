@@ -236,6 +236,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
          margin: 20,
     },
+    camButton: {
+     // marginTop : 50
+     //paddingBottom:-10,
+     //paddingTop: 20
+     marginTop: 40
+     
+
+    }
    
 
       

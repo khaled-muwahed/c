@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import SearchUser from '../components/search';
 import getUser from '../components/getUserDetails';
 import Update from '../components/updateUser';
@@ -25,7 +25,7 @@ class  bottomTabNav extends PureComponent{
                 iconName = focused ? 'person' : 'person-outline';
               }
               else if(route.name === ('Update Account')) {
-                iconName = focused ? 'add-circle' : 'add-circle-outline';
+                iconName = focused ? 'settings' : 'settings-outline';
               }
               else if(route.name === ('Search')) {
                 iconName = focused ? 'search' : 'search-outline';
@@ -34,7 +34,7 @@ class  bottomTabNav extends PureComponent{
             },
           })}
           tabBarOptions={{
-            activeTintColor: 'darkred',
+            activeTintColor: '#CC8D17',
             inactiveTintColor: 'gray',
             style: { position: 'absolute', fontWeight: 5, backgroundColor: 'white' }
           }}

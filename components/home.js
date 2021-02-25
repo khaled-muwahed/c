@@ -164,7 +164,7 @@ class Home extends PureComponent {
                 style={styles.buttonStyle}
                 onPress={() => this.signOut()}
                >
-                <Text style={styles.formTouchText}>logout</Text>
+                <Text style={styles.formTouchText}>logout <Ionicons name= {"log-out-outline"} size = {25}/></Text>
               </TouchableOpacity>
         </View>
       

@@ -3,6 +3,10 @@ import {  Text, TouchableOpacity, View, Alert } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../Styling/stylingSheet';
+
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+//import { Icon } from 'react-native-vector-icons/icon';
 class addReviewPic extends Component {
     //This constructor is used to create and initialise the objects below     
     constructor(props) {
@@ -10,8 +14,7 @@ class addReviewPic extends Component {
         super(props);
         //This state defines the data type of the objects below
         this.state = {
-            token: '',
-            user_id: '',
+  
             clicked_location_id: this.props.route.params.location_id,
             clicked_review_id: this.props.route.params.review_id,
         };
@@ -21,7 +24,7 @@ class addReviewPic extends Component {
     //This method is called after all the elements of the page are rendered, which renders the function getToken() to get the token and getuserID to get the user id 
     componentDidMount() {
       
-        console.log("http://10.0.2.2:3333/api/1.0.0/location/"+ this.state.clicked_location_id +"/review/"+this.state.clicked_review_id +"/photo/");
+      //  console.log("http://10.0.2.2:3333/api/1.0.0/location/"+ this.state.clicked_location_id +"/review/"+this.state.clicked_review_id +"/photo/");
     }
 
     //This async function sends an API request to the server for the user to take a picture for a chit, attaching the token within the header
@@ -51,10 +54,16 @@ class addReviewPic extends Component {
           this.props.navigation.navigate('ViewReviews');
          
         }else if(response.status === 400) {
-          throw 'Bad req';
+          throw 'Bad request';
         }
           else if(response.status === 401) {
-          throw 'unautorised';
+          throw 'unauthorised';
+        }
+        else if(response.status === 404) {
+        throw 'Not found';
+       }
+        else if(response.status === 500) {
+        throw 'server error';
         }
         else{
           throw 'Somthing went wrong';
@@ -93,9 +102,8 @@ class addReviewPic extends Component {
                         onPress={this.takePicture.bind(this)}
                         style={styles.capture}
                     >
-                        <Text style={styles.textStyle}>
-                            CAPTURE
-            </Text>
+                      <Ionicons name="camera" size = {70} style = {styles.camButton}></Ionicons>
+                    
                     </TouchableOpacity>
                 </View>
             </View>

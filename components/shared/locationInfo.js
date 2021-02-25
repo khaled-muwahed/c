@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import styles from '../../Styling/stylingSheet';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 //import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, Text, View,Image,Use,RefreshControl, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -109,7 +109,7 @@ class LocatinInfo extends React.Component {
          })
          .then((response) => {
            if(response.status === 200) {             
-             ToastAndroid.show("deleted", ToastAndroid.show);
+             ToastAndroid.show("Removed from favourite locations", ToastAndroid.show);
            }else{
              throw 'Somthing went wrong';
            }
@@ -355,13 +355,15 @@ class LocatinInfo extends React.Component {
 
                 style={styles.buttonStyle}
                 onPress={() => this.handleMyFav()}>
-                <Text >{this.state.isLikedLocation === true? "UnFavourite ♥" : "Favourite ♡"}</Text>
+                  
+                {this.state.isLikedLocation === true? <Ionicons name="star" size = {20} color ="gold"></Ionicons> 
+                : <Ionicons name="star-outline" size = {20} color ='black'></Ionicons>}
                 </TouchableOpacity>
                 
                 <TouchableOpacity
                 style={styles.buttonStyle}
                 onPress={() => navigator.navigate('add_review',{location_id: this.state.userData.location_id})  }>
-                <Text >add review</Text>
+                <Text >Leave a review</Text>
                 </TouchableOpacity>
                 </View>
             
@@ -434,7 +436,10 @@ class LocatinInfo extends React.Component {
                       style={styles.buttonStyle}
                       onPress={() => this.handleLikedReviews(this.state.userData.location_id ,item.review_id) }>
                         
-                      <Text > {this.checkLikedReview(item.review_id) === true? "♥" : "♡" } { item.likes} </Text>
+                      <Text > {this.checkLikedReview(item.review_id) === true?
+                       <Ionicons name="heart" size = {20} color ="red"></Ionicons> 
+                       : <Ionicons name="heart-outline" size = {20} color ='black'></Ionicons> }
+                        { item.likes} </Text>
                       </TouchableOpacity>
                       </View>
 
