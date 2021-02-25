@@ -52,6 +52,26 @@ class ViewReviews extends React.Component {
         console.log(error);
       })
     }
+    deleteAlert = (id , loc) => {
+      Alert.alert(
+        'Deleting this Review',
+        'Are you sure you want to delete this review?',
+        [
+          {
+            text: 'Cancel',
+            
+          },
+          {
+            text: 'Delete',
+            onPress: () => this.deleteReview(id , loc),
+          },
+        ],
+        {cancelable: false},
+      );
+    };
+
+
+
 
        deleteReview = async (loc_id,rev_id) => {
         let token = await  AsyncStorage.getItem('@session_token');
@@ -85,40 +105,6 @@ class ViewReviews extends React.Component {
       
     }
 
-
-    /*
-    
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "image/jpeg",
-                        "X-Authorization": this.state.token // attach the logged user's token into the header for this request to be valid
-                    },
-
-                    body: data
-                })
-
-                .then((response) => {
-                    console.log("response status : " + response.status)
-                    if (response.status === 201) { // pop up confirmation window when a picture is taken successfully and navigate the user back to their profile
-                        Alert.alert("Picture added !")
-                        this.props.navigation.navigate('MyProfile');
-                    }
-                    else if (response.status === 400) { // if the request was bad, a pop up window will be popped showing that
-                        Alert.alert("Bad request !")
-                    }
-                    else if (response.status === 401) { //  if the user was Unauthorised, a pop up window will be popped showing that
-                        Alert.alert("Unauthorised!")
-                    }
-                    else if (response.status === 404) { // if the user wasn't found, a pop up window will be popped showing that
-                        Alert.alert("Not found!")
-                    }
-                })
-
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
-*/
 
 // to updateeeee
 
@@ -244,7 +230,7 @@ class ViewReviews extends React.Component {
 
                         <TouchableOpacity
                             style={styles.buttonStyle}
-                           onPress={() => this.deleteReview(item.location.location_id , item.review.review_id) + this.onRefresh()}
+                           onPress={() => this.deleteAlert(item.location.location_id , item.review.review_id) }
                           >
                           <Text style={styles.formTouchText}>Delete</Text>
                         </TouchableOpacity>
