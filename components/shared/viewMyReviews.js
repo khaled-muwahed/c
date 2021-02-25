@@ -1,9 +1,11 @@
 import * as React from 'react';
 //import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, ActivityIndicator, Text,RefreshControl, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator, Text,Image,RefreshControl, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Rating, AirbnbRating } from 'react-native-ratings';
-import styles from '../../Styling/stylingSheet'
+import styles from '../../Styling/stylingSheet';
+
+import { RNCamera } from 'react-native-camera';
 
 class ViewReviews extends React.Component {
    
@@ -82,6 +84,45 @@ class ViewReviews extends React.Component {
       })
       
     }
+
+
+    /*
+    
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "image/jpeg",
+                        "X-Authorization": this.state.token // attach the logged user's token into the header for this request to be valid
+                    },
+
+                    body: data
+                })
+
+                .then((response) => {
+                    console.log("response status : " + response.status)
+                    if (response.status === 201) { // pop up confirmation window when a picture is taken successfully and navigate the user back to their profile
+                        Alert.alert("Picture added !")
+                        this.props.navigation.navigate('MyProfile');
+                    }
+                    else if (response.status === 400) { // if the request was bad, a pop up window will be popped showing that
+                        Alert.alert("Bad request !")
+                    }
+                    else if (response.status === 401) { //  if the user was Unauthorised, a pop up window will be popped showing that
+                        Alert.alert("Unauthorised!")
+                    }
+                    else if (response.status === 404) { // if the user wasn't found, a pop up window will be popped showing that
+                        Alert.alert("Not found!")
+                    }
+                })
+
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+*/
+
+// to updateeeee
+
+
 
       
   componentDidMount() {
@@ -181,6 +222,14 @@ class ViewReviews extends React.Component {
                         </View>
 
                         <Text style={styles.centeredTxt} >{ item.review.review_body}</Text>
+
+                        <Image
+                          source={{uri:'http://10.0.2.2:3333/api/1.0.0/location/'+
+                          item.location.location_id+'/review/'+
+                          item.review.review_id+'/photo?timestamp' +Date.now()} }
+                    
+                          style={styles.reviewImag}
+                        />
                    
                        
                         
@@ -199,6 +248,14 @@ class ViewReviews extends React.Component {
                           >
                           <Text style={styles.formTouchText}>Delete</Text>
                         </TouchableOpacity>
+
+
+                        <TouchableOpacity
+                         style={styles.buttonStyle}
+                           onPress={() => navigator.navigate('addReviewPic',{review_id: item.review.review_id, 
+                          location_id: item.location.location_id})}>
+                         <Text style={styles.formTouchText}>Add a photo</Text>
+                         </TouchableOpacity>
                         </View>
                         
                             

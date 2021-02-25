@@ -441,7 +441,7 @@ class LocatinInfo extends React.Component {
                       <Image
                        source={{uri:'http://10.0.2.2:3333/api/1.0.0/location/'+this.state.userData.location_id+'/review/'+item.review_id+'/photo?timestamp' +Date.now()} }
                 
-                      style={styles.imageStyle}
+                      style={styles.reviewImag}
                      />
 
                     </View>

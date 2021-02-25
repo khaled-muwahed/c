@@ -77,11 +77,12 @@ const styles = StyleSheet.create({
       
       resizeMode: "cover",
       justifyContent: "center",
-     // alignSelf: 'stretch',
+      alignSelf: 'stretch',
     },
     imageStretch: {
         
       alignSelf: 'stretch',
+      
       flexDirection: 'row',
      // justifyContent: 'center',
       alignItems: 'stretch',
@@ -193,6 +194,21 @@ const styles = StyleSheet.create({
         width: 180,
         borderRadius: 300/15,
       },
+
+      reviewImag: {
+        
+        alignSelf: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+       // alignItems: 'stretch',
+        height: 120,
+        width: 140,
+        borderRadius: 300/15,
+      },
+
+
+
+
       separator: {
         marginVertical: 8,
         borderBottomColor: '#737373',
@@ -205,6 +221,23 @@ const styles = StyleSheet.create({
     
       }
       ,
+
+    
+    
+    preview: { flex: 1, 
+      justifyContent: 'flex-end'
+      , alignItems: 'center'
+     },
+    capture: {
+        flex: 0
+        , borderRadius: 5,
+         padding: 15, 
+         paddingHorizontal: 20,
+        alignSelf: 'center',
+         margin: 20,
+    },
+   
+
       
 
 
