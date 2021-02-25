@@ -123,6 +123,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#E74C3C',
       },
+      deleteText :
+      {
+        fontWeight: 'bold',
+        color: 'red',
+
+      }
+
+      ,
 
 
 
