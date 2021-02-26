@@ -11,6 +11,7 @@ import {
 import styles from '../Styling/stylingSheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 class SearchUser extends Component {
   constructor(props) {
@@ -27,7 +28,8 @@ class SearchUser extends Component {
       clenliness_rating: 0,
       pageCount: 0,
       pageNum: 0,
-      initialNum: 100
+      initialNum: 100,
+      search_in: ''
     };
   }
 
@@ -42,7 +44,14 @@ class SearchUser extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          return response.json()
+          return response.json();
+        } else if (response.status === 400) {
+          throw 'bad request';
+        } else if (response.status === 401) {
+          throw 'Unauthorised';
+        }
+        else if (response.status === 500) {
+          throw 'server error';
         } else {
           throw 'Somthing went wrong';
         }
@@ -61,6 +70,7 @@ class SearchUser extends Component {
   }
 
   searchUrl = (page) => {
+    //adding extras and filters to search link based on what user selects
     let url = 'http://10.0.2.2:3333/api/1.0.0/find?'
     if (this.state.q != '') {
       url += "q=" + this.state.q + "&";
@@ -78,6 +88,10 @@ class SearchUser extends Component {
     if (this.state.quality_rating > 0) {
       url += "quality_rating=" + this.state.quality_rating + "&";
     }
+    if (this.state.search_in !== '') {
+      url += 'search_in=' + this.state.search_in + '&';
+    }
+    //calling this function which brings back the number of search results, which i need for pagination
     this.getLocationsCount(url);
     this.setState({ pageNum: page });
     let offset = page * 5;
@@ -100,6 +114,7 @@ class SearchUser extends Component {
   }
 
   getLocationsCount = async (url) => {
+    //this fuction counts search results and stores the count in a state
     let token = await AsyncStorage.getItem('@session_token');
     return fetch(url + "&limit=" + this.state.initialNum, {
       method: 'get',
@@ -111,9 +126,9 @@ class SearchUser extends Component {
         if (response.status === 200) {
           return response.json();
         } else if (response.status === 400) {
-          throw 'Unauthorised';
-        } else if (response.status === 401) {
           throw 'bad request';
+        } else if (response.status === 401) {
+          throw 'Unauthorised';
         }
         else if (response.status === 500) {
           throw 'server error';
@@ -137,12 +152,12 @@ class SearchUser extends Component {
   onRefresh = () => {
     this.searchUrl(this.state.pageNum);
   }
-
+// the following 2 functions are used for my pagination, multiplying results count by five so i display 5 items a page
+//caling search function to retrive a different page whenever user clicks next or previous
   nextPage = (page) => {
     if (this.state.pageNum * 5 < this.state.pageCount - 5) {
       this.searchUrl(page)
       this.setState({ pageNum: page })
-
     }
 
   }
@@ -155,7 +170,7 @@ class SearchUser extends Component {
 
   }
 
-
+// resetting search states whenever user comes back to the page
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.setState({
@@ -174,8 +189,6 @@ class SearchUser extends Component {
 
   render() {
     const navigator = this.props.navigation;
-
-
     return (
       <View style={styles.container}>
 
@@ -229,6 +242,25 @@ class SearchUser extends Component {
           >
             <Text style={styles.formTouchText}>Search</Text>
           </TouchableOpacity>
+
+          <DropDownPicker
+            items={[
+              { label: 'All', value: 'all' },
+              { label: 'Favourite', value: 'favourite' },
+              { label: 'Reviewed', value: 'reviewed' },
+            ]}
+            itemStyle={{
+              justifyContent: 'flex-start',
+            }}
+
+            style={styles.dropDownMenu}
+            containerStyle={{ height: 50 }}
+            dropDownStyle={{ width: 100 }}
+            defaultValue={'all'}
+            onChangeItem={(item) => this.setState({
+              search_in: item.value
+            })}
+          />
 
 
 
