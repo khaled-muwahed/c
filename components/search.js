@@ -8,10 +8,11 @@ import {
   ToastAndroid,
   StyleSheet, Text,
   TextInput,
-  TouchableOpacity, View
+  TouchableOpacity, View, SafeAreaView
 } from 'react-native';
 import styles from '../Styling/stylingSheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class SearchUser extends Component {
     constructor(props) {
@@ -29,6 +30,11 @@ class SearchUser extends Component {
              price_rating: 0,
             quality_rating: 0,
             clenliness_rating: 0,
+
+
+            pageCount: 0,
+            pageNum: 0,
+            initialNum: 100
         };
       }
 
@@ -63,7 +69,7 @@ class SearchUser extends Component {
       
       }
 
-      searchUrl = () =>  {
+      searchUrl = (page) =>  {
           let url = 'http://10.0.2.2:3333/api/1.0.0/find?'
 
 
@@ -84,10 +90,27 @@ class SearchUser extends Component {
                     url += "quality_rating=" + this.state.quality_rating + "&";
                     }
 
+                    //
+                    this.getLocationsCount(url);
+                     this.setState({pageNum: page});
+                    console.log(this.state.pageNum);
+                    let offset = page * 5;
+                    url += 'offset='+offset+'&limit='+5;
+                    this.search(url);
+                    console.log(url);
+
+
+
+//
           console.log(url);
 
           this.search(url)
       }
+
+
+
+
+
       ratingDone   (rating , name) {
           let stateObj = () => {
               let returnObj = {};
@@ -98,15 +121,76 @@ class SearchUser extends Component {
 
       }
 
+      getLocationsCount = async (url) => {
+        let token = await  AsyncStorage.getItem('@session_token');
+        return fetch(url+"&limit="+this.state.initialNum, {
+          method: 'get',
+          headers: {
+            'x-authorization' : token
+          },     
+        })
+        .then((response) => {
+          if(response.status === 200) {
+            return response.json();
+          } else if(response.status === 400) {
+            throw 'Unauthorised';
+          } else if(response.status === 401) {
+            throw 'bad request';
+          }else{
+            throw 'Somthing went wrong';
+          }
+        })
+        .then(async (responseJson) => {
+            
+           this.setState({pageCount: responseJson.length})
+           console.log(this.state.pageCount , "found results");
+        })
+        .catch((error) => {
+          console.log(error);
+          ToastAndroid.show(error, ToastAndroid.SHORT);
+        })
+      }
+
   
   logData= () => {
     console.log(this.state.overall_rating);
     }
 
     onRefresh = () => {
-        this.searchUrl();
+        this.searchUrl(this.state.pageNum);
        // console.log("redsfsfres")
       }
+
+      nextPage = (page) => {
+        if (this.state.pageNum * 5 <this.state.pageCount-5){
+          this.searchUrl(page)
+          this.setState({pageNum : page})
+          console.log(this.state.pageNum);
+        }
+  
+      }
+  
+      perviousPage = (page) => {
+        if (this.state.pageNum > 0){
+          this.searchUrl(page)
+          this.setState({pageNum : page})
+          console.log(this.state.pageNum);
+        }
+  
+      }
+
+
+      componentDidMount(){
+        this.unsubscribe = this.props.navigation.addListener('focus', ()=>{
+          this.setState({locations: null
+           , pageCount: 0,
+            pageNum: 0,})
+        });
+      }
+      componentWillUnmount(){
+        this.unsubscribe();
+      }
+    
 
 
 
@@ -115,7 +199,7 @@ class SearchUser extends Component {
        
         
         return (
-        <View>
+        <View style = {styles.container}>
 
                 
                 <TextInput
@@ -153,24 +237,47 @@ class SearchUser extends Component {
                 />
                 </View>
                 <View style={styles.fixToText}> 
+                <TouchableOpacity
+                  style={styles.formTouch}
+                  onPress={() => {this.perviousPage(this.state.pageNum -1)}}>
+                                    
+                  {this.state.pageNum===0?<Text ></Text>:<Ionicons name= {"chevron-back-sharp"} size = {23}/>}
+                            
+                </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.buttonStyle}
-                onPress={() => this.searchUrl()}
+                onPress={() => this.searchUrl(0)}
                >
                 <Text style={styles.formTouchText}>Search</Text>
               </TouchableOpacity>
+
+              
+
+                <TouchableOpacity
+                style={styles.formTouch}
+                  onPress={() => {this.nextPage(this.state.pageNum+1)}}>
+                          
+                  {this.state.pageNum * 5 <this.state.pageCount-5?<Ionicons name= {"chevron-forward-sharp"} size = {23}/>:<Text></Text>}
+
+              </TouchableOpacity>
+
+
+              
+           
+
               </View>
                
-
+        
                 <FlatList  
+                   // style = {{height:'5%'}}
                     refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}
                         onRefresh={this.onRefresh}
                     />
                     }
-                    
+                    style = {styles.fields}
                     data={this.state.locations}
                     renderItem={({item})=>(
 
@@ -189,6 +296,9 @@ class SearchUser extends Component {
                         )}
                         keyExtractor= {(item)=> item.location_id.toString()}
                     />
+
+
+                 
                     
                 
             
