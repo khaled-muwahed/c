@@ -4,10 +4,8 @@ import styles from '../Styling/stylingSheet';
 
 import React, { Component } from 'react';
 import {
-  ScrollView,
-  Button,
   ToastAndroid,
-  StyleSheet, Text,
+  Text,
   TextInput, ImageBackground,
   TouchableOpacity, View
 } from 'react-native';
@@ -19,11 +17,24 @@ class SignIn extends Component {
     super(props);
 
     this.state = {
+      email: '',
+      password: '',
+      token: ''
+
+    }
+  }
+
+  componentDidMount() {
+    // reseting states when user comes back to the login after logging out, so previous users details does not show in the text box
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.setState({
         email: '',
         password: '',
-        token: ''
-        
-    }
+      })
+    });
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
 
@@ -40,94 +51,99 @@ class SignIn extends Component {
     }
   }
 
-  signIn = () => {
-    if( this.state.email === '' || this.state.password === ''){
+  signIn = async () => {
+     //Client side user validation if user leaves any of the required feilds empty, they will get an error
+    if (this.state.email === '' || this.state.password === '') {
       ToastAndroid.show("fields cant be blank", ToastAndroid.show);
-  }
-  else{
-    return fetch("http://10.0.2.2:3333/api/1.0.0/user/login", {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state)
-    })
-    .then((response) => {
-      if(response.status === 200) {
-        return response.json()
-      }else if(response.status === 400) {
-        throw 'Email or Password Wrong';
-      }else{
-        throw 'Somthing went wrong';
-      }
-    })
-    .then(async (responseJson) => {
-      console.log( responseJson);
-      await AsyncStorage.setItem('@session_token', responseJson.token);
-      await AsyncStorage.setItem('@user_id', JSON.stringify(responseJson.id));
-      ToastAndroid.show("Login successful", ToastAndroid.SHORT);
-      this.props.navigation.navigate('home');
-      
-    })
-    .catch((error) => {
-      console.log(error);
-      ToastAndroid.show(error, ToastAndroid.SHORT);
-    })
-  }
+    }
+    else {
+      return fetch("http://10.0.2.2:3333/api/1.0.0/user/login", {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state)
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json()
+          } else if (response.json.status === 400) {
+            throw 'Invalid email/password supplied';
+          }
+          else if (response.json.status === 500) {
+            throw 'server error';
+          }
+          else {
+            throw 'Somthing went wrong';
+          }
+        })
+        .then(async (responseJson) => {
+          console.log(responseJson);
+          await AsyncStorage.setItem('@session_token', responseJson.token);
+          await AsyncStorage.setItem('@user_id', JSON.stringify(responseJson.id));
+          ToastAndroid.show("Login successful", ToastAndroid.SHORT);
+          this.props.navigation.navigate('home');
+
+        })
+        .catch((error) => {
+          console.log(error);
+          ToastAndroid.show(error, ToastAndroid.SHORT);
+        })
+    }
   }
 
 
-  
 
-  
+
+
 
   render() {
     const navigator = this.props.navigation;
     return (
-    <View style={styles.container}>
-      <ImageBackground source={image} style={styles.image}>
-        <Text style={styles.titleStyle}>Log In</Text>
+      <View style={styles.container}>
+        <ImageBackground source={image} style={styles.image}>
+          <Text style={styles.titleStyle}>Log In</Text>
 
-        <View style={styles.formItem}>
-          <Text style={styles.formLabel}>Email:</Text>
-          <TextInput
-            placeholder="Enter an email..."
-            style={styles.formInput}
-            onChangeText={(email) => this.setState({email})}
-            value={this.state.email}
-          />
-        </View>
+          <View style={styles.formItem}>
+            <Text style={styles.formLabel}>Email:</Text>
+            <TextInput
+              placeholder="Enter an email..."
+              style={styles.formInput}
+              onChangeText={(email) => this.setState({ email })}
+              value={this.state.email}
+            />
+          </View>
 
-        <View style={styles.formItem}>
-        <Text style={styles.formLabel}>Password:</Text>
-        <TextInput
-        
-          placeholder="Enter password..."
-          style={styles.formInput}
-          secureTextEntry
-          onChangeText={(password) => this.setState({password})}
-          value={this.state.password}
-        />
-        </View>
-        
-          <View style = {styles.formItem}> 
+          <View style={styles.formItem}>
+            <Text style={styles.formLabel}>Password:</Text>
+            <TextInput
+
+              placeholder="Enter password..."
+              style={styles.formInput}
+              secureTextEntry
+              onChangeText={(password) => this.setState({ password })}
+              value={this.state.password}
+            />
+          </View>
+
+          <View style={styles.formItem}>
             <TouchableOpacity
               style={styles.buttonStyle}
               onPress={() => this.signIn()}>
               <Text style={styles.formTouchText}>Sign In</Text>
             </TouchableOpacity>
-            
-          
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => navigator.navigate('signup')}>
-                <Text style={styles.formTouchText}>Go to sign up</Text>
-              </TouchableOpacity>
-              
-        </View>
-      
-       </ImageBackground>
-    </View>
+
+
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={() => navigator.navigate('signup')}>
+              <Text style={styles.formTouchText}>Go to sign up</Text>
+            </TouchableOpacity>
+
+          </View>
+
+        </ImageBackground>
+      </View>
     );
   }
 }

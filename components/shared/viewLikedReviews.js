@@ -1,21 +1,23 @@
 import * as React from 'react';
 //import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, ActivityIndicator
-    , Text,RefreshControl, View,
-     TextInput, Alert, ToastAndroid, ScrollView,
-      FlatList , SafeAreaView, Button, Image } from 'react-native';
+import {
+  TouchableOpacity, ActivityIndicator
+  , Text, RefreshControl, View,
+  ToastAndroid,
+  FlatList, SafeAreaView, Image
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Rating, AirbnbRating } from 'react-native-ratings';
+import { AirbnbRating } from 'react-native-ratings';
 import styles from '../../Styling/stylingSheet';
 
 class ViewLikedReviews extends React.Component {
-   
+
   constructor(props) {
 
     super(props);
     this.state = {
-        refreshing: false,
-        setRefreshing: false,
+      refreshing: false,
+      setRefreshing: false,
 
       isLoading: true,
       userData: null
@@ -23,213 +25,204 @@ class ViewLikedReviews extends React.Component {
 
   }
 
-  getData =  async () => {
-      console.log('got data successfully');
-    let id = await  AsyncStorage.getItem('@user_id');
-    let token = await  AsyncStorage.getItem('@session_token');
-    return fetch('http://10.0.2.2:3333/api/1.0.0/user/'+id, {
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-authorization' : token
-  
-        }
-      })
+  getData = async () => {
+    console.log('got data successfully');
+    let id = await AsyncStorage.getItem('@user_id');
+    let token = await AsyncStorage.getItem('@session_token');
+    return fetch('http://10.0.2.2:3333/api/1.0.0/user/' + id, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-authorization': token
+
+      }
+    })
       .then((response) => {
-        if(response.status === 200) {
+        if (response.status === 200) {
           return response.json()
-        }else{
+        } else {
           throw 'Somthing went wrong';
         }
       })
       .then(async (responseJson) => {
-        this.setState ({
+        this.setState({
           isLoading: false,
-          userData : responseJson
+          userData: responseJson
         });
 
       })
       .catch((error) => {
         console.log(error);
       })
-    }
+  }
 
-  
 
-      
+
+
   componentDidMount() {
 
     this.getData();
-    //this.onRefresh();
-    }
 
-  
+  }
 
-    onRefresh = () => {
-        this.getData();
-        console.log("deleting refreshing")
-      }
 
-      unLikeReview = async (loc_id,rev_id) => {
-        let token = await  AsyncStorage.getItem('@session_token');
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ loc_id +"/review/"+rev_id +"/like", {
-      
-        method: 'delete',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-authorization' : token
-        },
-      })
+
+  onRefresh = () => {
+    this.getData();
+
+  }
+// unliking a specific review , passing click review id and location id from my flat list
+  unLikeReview = async (loc_id, rev_id) => {
+    let token = await AsyncStorage.getItem('@session_token');
+    return fetch("http://10.0.2.2:3333/api/1.0.0/location/" + loc_id + "/review/" + rev_id + "/like", {
+
+      method: 'delete',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-authorization': token
+      },
+    })
       .then((response) => {
-        if(response.status === 200) {
-            console.log('unliked')
-            this.setState ({isLikedReview: false});
-          //return response.json()
-        }else if(response.status === 404) {
+        if (response.status === 200) {
+
+          this.setState({ isLikedReview: false });
+
+        } else if (response.status === 404) {
           throw 'not found';
         }
-          else if(response.status === 401) {
+        else if (response.status === 401) {
           throw 'unautorised';
         }
-        else if(response.status === 403) {
+        else if (response.status === 403) {
           throw 'unautorised';
         }
-        else if(response.status === 500) {
+        else if (response.status === 500) {
           throw 'server error';
         }
-        else{
+        else {
           throw 'Somthing went wrong';
         }
       })
-    
+
       .catch((error) => {
         console.log(error);
         ToastAndroid.show(error, ToastAndroid.SHORT);
       })
-      
-    }
-  
+
+  }
 
 
-    logDataTesting = (x,y) => {
-       // console.log()
-    }
-    
-
-
+// I made all the lists through out my app refreshable when ever the user pulls down
 
   render() {
-   
 
-    
-    const navigator = this.props.navigation;
-      console.log('get data rendering');
+
+    console.log('get data rendering');
     if (this.state.isLoading) {
       return (
-          <View>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
 
       )
     }
 
-    else{
-      
+    else {
 
-    //<Text onPress={() => navigator.navigate('LocatinInfo',{location_id: item.location_id})  }>{item.location_name }</Text>
-    return (
+
+      return (
         <SafeAreaView style={styles.container}>
-               
-                    
-              <Text style= {styles.txtInitials}>{this.state.userData.first_name + " " + this.state.userData.last_name  }</Text>
-              <Text style= {styles.headLine}>My Liked Reviews</Text>
-                  
-              <FlatList
-               refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={this.onRefresh}      />   }
 
-                data={this.state.userData.liked_reviews}
-                 renderItem={({item})=>(
-                     
-                    <View style = {styles.fields}>
-                      <Text style = {styles.centeredTxt}> {item.location.location_name  }, {item.location.location_town  }</Text>
-                      
-                      <Image
-                        style = {styles.imageStyle}
-                        source={item.location.photo_path ? {uri: item.location.photo_path } : null}
-                        />
-                       
-                        <View style={styles.fixToText}>
-                            <Text style={styles.textAdjust}>overall rating: </Text>
-                            <AirbnbRating
-                            size ={15}
-                            defaultRating ={item.review.overall_rating}
-                            isDisabled 
-                            />
-                            <Text style={styles.textAdjust}>price rating:</Text>
-                            <AirbnbRating
-                            size ={15}
-                            
-                            defaultRating = { item.review.price_rating}
-                            isDisabled
-                            />
-                        </View>
 
-                            <View style = {styles.fixToText}>
-                            <Text style={styles.textAdjust}>cleanliness rating: </Text>
-                            <AirbnbRating
-                            size ={15}
-                              defaultRating ={item.review.clenliness_rating}
-                              isDisabled
-                            />
-                            <Text style={styles.textAdjust}>quality rating: </Text>
-                            <AirbnbRating
-                            size ={15}
-                            defaultRating = {item.review.quality_rating}
-                            isDisabled
-                            
-                            />
+          <Text style={styles.txtInitials}>{this.state.userData.first_name + " " + this.state.userData.last_name}</Text>
+          <Text style={styles.headLine}>My Liked Reviews</Text>
 
-                        </View>
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh} />}
 
-                        <Text style={styles.centeredTxt} >{ item.review.review_body}</Text>
-                   
-                       
-                        
-                        <View style = {styles.fixToText}>
-                        <TouchableOpacity
+            data={this.state.userData.liked_reviews}
+            renderItem={({ item }) => (
 
-                        style={styles.buttonStyle}
-                        onPress={() => this.unLikeReview(item.location.location_id , item.review.review_id) + this.onRefresh()}>
-                            
-                        <Text >Unlike ♥ </Text>
-                        </TouchableOpacity>
-                        </View>
-                        
-                            
-                    </View>
-                    )}
-                    keyExtractor= {(item)=> item.review.review_id.toString()}
+              <View style={styles.fields}>
+                <Text style={styles.centeredTxt}> {item.location.location_name}, {item.location.location_town}</Text>
 
-                    />
-                
+                <Image
+                  style={styles.revImageStyle}
+                  source={item.location.photo_path ? { uri: item.location.photo_path } : null}
+                />
+
+                <View style={styles.fixToText}>
+                  <Text style={styles.textAdjust}>overall rating: </Text>
+                  <AirbnbRating
+                    size={15}
+                    defaultRating={item.review.overall_rating}
+                    isDisabled
+                  />
+                  <Text style={styles.textAdjust}>price rating:</Text>
+                  <AirbnbRating
+                    size={15}
+
+                    defaultRating={item.review.price_rating}
+                    isDisabled
+                  />
+                </View>
+
+                <View style={styles.fixToText}>
+                  <Text style={styles.textAdjust}>cleanliness rating: </Text>
+                  <AirbnbRating
+                    size={15}
+                    defaultRating={item.review.clenliness_rating}
+                    isDisabled
+                  />
+                  <Text style={styles.textAdjust}>quality rating: </Text>
+                  <AirbnbRating
+                    size={15}
+                    defaultRating={item.review.quality_rating}
+                    isDisabled
+
+                  />
+
+                </View>
+
+                <Text style={styles.centeredTxt} >{item.review.review_body}</Text>
 
 
 
-               
-                
+                <View style={styles.fixToText}>
+                  <TouchableOpacity
 
-            </SafeAreaView>
-       
+                    style={styles.buttonStyle}
+                    onPress={() => this.unLikeReview(item.location.location_id, item.review.review_id) + this.onRefresh()}>
 
-     
-    );
+                    <Text >Unlike ♥ </Text>
+                  </TouchableOpacity>
+                </View>
+
+
+              </View>
+            )}
+            keyExtractor={(item) => item.review.review_id.toString()}
+
+          />
+
+
+
+
+
+
+
+        </SafeAreaView>
+
+
+
+      );
+    }
+
   }
-  
-}
 }
 
 
-export default  ViewLikedReviews ;
+export default ViewLikedReviews;
