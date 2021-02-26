@@ -26,13 +26,13 @@ Now you should add the following lines to the Manifests in order to allow access
 Now click on the build.gradle(Module:app), onto the defaultConfig compare and add the missing ones from following lines:
 ```bash
 defaultConfig {
-applicationId "com.chitr"
-minSdkVersion rootProject.ext.minSdkVersion
-targetSdkVersion rootProject.ext.targetSdkVersion
-missingDimensionStrategy 'react-native-camera', 'general'
-versionCode 1
-versionName "1.0"
-multiDexEnabled true
+  applicationId "com.myproject"
+        minSdkVersion rootProject.ext.minSdkVersion
+        missingDimensionStrategy 'react-native-camera', 'general'
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
 }
 ```
 Make sure now to Sync project with new changes from file on the top corner of android studio screen.
