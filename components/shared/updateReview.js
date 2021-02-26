@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   ScrollView,
   Button,
-  ToastAndroid,
+  ToastAndroid,Alert,
   
   StyleSheet, Text,
   TextInput,
@@ -26,6 +26,28 @@ class update_review extends Component {
       clicked_review_id: this.props.route.params.review_id,
       
     }
+  }
+
+
+  isPorfane = async () =>{
+    const badWord = ["pasta","rice","tea","food","cakes","pastries","cake","pastry","icecream","jucie","food" ];
+    let str = this.state.review_body.toLowerCase();
+    var res =  str.split(" ");
+    console.log(res);
+
+    for (let i =0 ; i< res.length;i++){
+      for (let j =0; j <badWord.length; j++){
+      if(res[i] === badWord[j]){
+        console.log("similar words found" , res[i] , badWord[j]);
+      
+        Alert.alert("reviews must be relevant");
+        return true
+      }
+    }
+      
+    }
+    this.updateReview()
+    return false 
   }
 
   updateReview = async () => {
@@ -166,7 +188,7 @@ componentDidMount() {
           <View style={styles.formItem}>
             <TouchableOpacity
               style={styles.formTouch}
-              onPress={() => this.updateReview()}>
+              onPress={() => this.isPorfane()}>
               <Text style={styles.formTouchText}>Submit</Text>
             </TouchableOpacity>
           </View>
