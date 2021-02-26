@@ -1,4 +1,5 @@
-import * as React from 'react';
+//import * as React from 'react';
+import React, { PureComponent } from 'react';
 //import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator, Text,Image,RefreshControl, View, TextInput, Alert, ToastAndroid, ScrollView, FlatList , SafeAreaView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,7 +8,7 @@ import styles from '../../Styling/stylingSheet';
 
 import { RNCamera } from 'react-native-camera';
 
-class ViewReviews extends React.Component {
+class ViewReviews extends PureComponent {
    
   constructor(props) {
 
@@ -52,7 +53,7 @@ class ViewReviews extends React.Component {
         console.log(error);
       })
     }
-    deleteAlert = (id , loc) => {
+    deleteReviewAlert = (id , loc) => {
       Alert.alert(
         'Deleting this Review',
         'Are you sure you want to delete this review?',
@@ -85,8 +86,9 @@ class ViewReviews extends React.Component {
       })
       .then((response) => {
         if(response.status === 200) {
-            console.log('deleted')
-          //return response.json()
+            //console.log('deleted');
+            this.getData();
+          
         }else if(response.status === 400) {
           throw 'Bad req';
         }
@@ -104,6 +106,65 @@ class ViewReviews extends React.Component {
       })
       
     }
+
+
+    deleteReviewPicAlert = (id , loc) => {
+      Alert.alert(
+        'Deleting this Review Photo',
+        'The photo will be permanently deleted, are you sure you want to delete?',
+        [
+          {
+            text: 'Cancel',
+            
+          },
+          {
+            text: 'Confirm',
+            onPress: () => this.deleteReviewPic(id , loc),
+          },
+        ],
+        {cancelable: false},
+      );
+    };
+
+
+
+    deleteReviewPic = async (loc_id, rev_id) => {
+      let token = await  AsyncStorage.getItem('@session_token');
+    return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ loc_id +"/review/"+rev_id+ "/photo", {
+     
+      method: 'delete',
+      headers: {
+      
+        'x-authorization' : token
+      },
+    })
+    .then((response) => {
+      if(response.status === 200) {
+        ToastAndroid.show("review photo deleted successfully", ToastAndroid.SHORT);
+       
+      }
+        else if(response.status === 401) {
+        throw 'unauthorised';
+      } 
+      else if(response.status === 404) {
+      throw 'Not found';
+     }
+      else if(response.status === 500) {
+      throw 'server error';
+      }
+     
+      else{
+        throw 'Somthing went wrong';
+      }
+    })
+   
+    .catch((error) => {
+      console.log("console error", error );
+      ToastAndroid.show(error, ToastAndroid.SHORT);
+    })
+    
+  }
+
 
 
 // to updateeeee
@@ -230,7 +291,7 @@ class ViewReviews extends React.Component {
 
                         <TouchableOpacity
                             style={styles.buttonStyle}
-                           onPress={() => this.deleteAlert(item.location.location_id , item.review.review_id) }
+                           onPress={() => this.deleteReviewAlert(item.location.location_id , item.review.review_id) }
                           >
                           <Text style={styles.formTouchText}>Delete</Text>
                         </TouchableOpacity>
@@ -242,7 +303,15 @@ class ViewReviews extends React.Component {
                           location_id: item.location.location_id})}>
                          <Text style={styles.formTouchText}>Add a photo</Text>
                          </TouchableOpacity>
+                         
                         </View>
+                        <View style={styles.fixToText}>
+                        <TouchableOpacity
+                         style={styles.buttonStyle}
+                           onPress={() => this.deleteReviewPicAlert(item.location.location_id , item.review.review_id) }>
+                         <Text style={styles.formTouchText}>Delete photo</Text>
+                         </TouchableOpacity>
+                         </View>
                         
                             
                     </View>
