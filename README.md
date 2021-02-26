@@ -42,8 +42,6 @@ The next step, open your terminal and navigate to the project directory. Then ru
 ```bash
 npm install
 ```
-
-```
 Re-insert this command to enure all the modules are installed properly :
 ```bash
 npm install
