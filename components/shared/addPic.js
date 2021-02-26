@@ -40,11 +40,12 @@ class addReviewPic extends Component {
   
         if (this.camera) {
           
-      return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+ this.state.clicked_location_id +"/review/"+this.state.clicked_review_id +"/photo/", {
+      return fetch("http://10.0.2.2:3333/api/1.0.0/location/"+
+       this.state.clicked_location_id +"/review/"+this.state.clicked_review_id +"/photo/", {
        
         method: 'post',
         headers: {
-          "Content-Type": "image/jpeg",
+          "Content-Type": "image/png",
           'x-authorization' : token
         },
         body: data
@@ -88,6 +89,7 @@ class addReviewPic extends Component {
     };
 
 
+    
     render() {
         return (
             <View style={styles.container}>
@@ -95,6 +97,7 @@ class addReviewPic extends Component {
                     ref={ref => {
                         this.camera = ref;
                     }}
+                  
                     style={styles.preview}
                 />
                 <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
