@@ -11,7 +11,7 @@ experience. Users can also comment on, and ‘like’ other reviews
 
 
 ## Visuals
-These are screenshots of the application and how it looks like include : The start screen - recent chits - user information - logged user profile - post a chit screen - search for a user
+These are screenshots of the application.
 
 <img src = "storage/screenshots/signin.png" width = "200"> <img src = "storage/screenshots/signup.png" width = "200"> <img src ="storage/screenshots/home.png" width = "200"> <img src = "storage/screenshots/home1.png" width = "200"> <img src = "storage/screenshots/search.png" width = "200"> <img src = "storage/screenshots/search1.png" width = "200">
 <img src ="storage/screenshots/userDetails.png" width = "200"> 
