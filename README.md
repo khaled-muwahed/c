@@ -13,9 +13,11 @@ experience. Users can also comment on, and ‘like’ other reviews
 ## Visuals
 These are screenshots of the application and how it looks like include : The start screen - recent chits - user information - logged user profile - post a chit screen - search for a user
 
-<img src = "storage/screenshots/signin.png" width = "200"><img src = storage/screenshots/signup.png" width = "200"><img src = storage/screenshots/home.png" width = "200"> <img src = storage/screenshots/home1.png" width = "200"><img src = storage/screenshots/search.png" width = "200"><img src = storage/screenshots/search1.png" width = "200"><img src = storage/screenshots/userDetails.png" 
-width = "200"> <img src = storage/screenshots/likedReviews.png" width = "200"> <img src = storage/screenshots/myReviews.png" width = "200"> <img src = storage/screenshots/takeApicture.png" width = "200"> <img src = storage/screenshots/deleteReview.png" width = "200">
-<img src = storage/screenshots/profanityFilter.png" width = "200"> <img src = storage/screenshots/updateUserDetails.png" width = "200">
+<img src = "storage/screenshots/signin.png" width = "200"><img src = "storage/screenshots/signup.png" width = "200"><img src ="storage/screenshots/home.png" width = "200"> <img src = "storage/screenshots/home1.png" width = "200"><img src = "storage/screenshots/search.png" width = "200"><img src = "storage/screenshots/search1.png" width = "200">
+<img src ="storage/screenshots/userDetails.png" width = "200"> 
+<img src = "storage/screenshots/likedReviews.png" width = "200"> <img src = "storage/screenshots/myReviews.png" width = "200">
+<img src = "storage/screenshots/takeApicture.png" width = "200"> <img src = "storage/screenshots/deleteReview.png" width = "200">
+<img src = "storage/screenshots/profanityFilter.png" width = "200"> <img src = "storage/screenshots/updateUserDetails.png" width = "200">
 
 
 ## Installation
