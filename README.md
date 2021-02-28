@@ -18,6 +18,7 @@ These are screenshots of the application and how it looks like include : The sta
 <img src = "storage/screenshots/likedReviews.png" width = "200"> <img src = "storage/screenshots/myReviews.png" width = "200">
 <img src = "storage/screenshots/takeApicture.png" width = "200"> <img src = "storage/screenshots/deleteReview.png" width = "200">
 <img src = "storage/screenshots/profanityFilter.png" width = "200"> <img src = "storage/screenshots/updateUserDetails.png" width = "200">
+<img src = "storage/screenshots/locationInfo.png" width = "200"> <img src = "storage/screenshots/signOut.png" width = "200">
 
 
 ## Installation
