@@ -10,6 +10,14 @@ series of ratings (e.g. quality, price, cleanliness) along with a short body of 
 experience. Users can also comment on, and ‘like’ other reviews
 
 
+## Visuals
+These are screenshots of the application and how it looks like include : The start screen - recent chits - user information - logged user profile - post a chit screen - search for a user
+
+<img src = "storage/screenshots/signin.png" width = "200"><img src = storage/screenshots/signup.png" width = "200"><img src = storage/screenshots/home.png" width = "200"> <img src = storage/screenshots/home1.png" width = "200"><img src = storage/screenshots/search.png" width = "200"><img src = storage/screenshots/search1.png" width = "200"><img src = storage/screenshots/userDetails.png" 
+width = "200"> <img src = storage/screenshots/likedReviews.png" width = "200"> <img src = storage/screenshots/myReviews.png" width = "200"> <img src = storage/screenshots/takeApicture.png" width = "200"> <img src = storage/screenshots/deleteReview.png" width = "200">
+<img src = storage/screenshots/profanityFilter.png" width = "200"> <img src = storage/screenshots/updateUserDetails.png" width = "200">
+
+
 ## Installation
 
 I will list the required steps to run the applications but first you would need to have the Android Studio development framework installed on your machine, Click [here](https://developer.android.com/studio?gclid=CjwKCAiA1eKBBhBZEiwAX3gql6WzXB-DD7GJYW1h2SNNXFvYikXHxyf0_7z4DMIlTlomShlV_CClmBoCWCcQAvD_BwE&gclsrc=aw.ds) to redirect you to the instructions of how to install it. Then you have to install React Native CLl on your machine. The instructions for installation are located [here](https://reactnative.dev/docs/getting-started).
