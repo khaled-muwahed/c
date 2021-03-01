@@ -66,8 +66,6 @@ Now you are all set the and application should open on your AVD
 ## Support
 If you have any issues with the project and want to get help, or even having an idea to enhance/add something I am always happy to hear from you via emails on : muwahedkhaled@gmail.com .
 
-## Roadmap
-I am planning on improving the responsiveness of the map and make it quicker in the future. 
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change in the application. Please feel free to email me in regards any contribution you would like to add using my email address above in support section. Follow this [link](https://github.com/khaled-muwahed/cooffidaProject) to do\wnload the repository on GitHub. 
